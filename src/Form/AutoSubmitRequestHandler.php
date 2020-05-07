@@ -16,6 +16,9 @@ use function call_user_func;
 use function is_array;
 use function Safe\array_replace_recursive;
 
+/**
+ * @internal
+ */
 final class AutoSubmitRequestHandler implements RequestHandlerInterface
 {
     private ServerParams $serverParams;
