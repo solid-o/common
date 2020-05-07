@@ -1,0 +1,48 @@
+{
+    "name": "solido/common",
+    "description": "Common classes for solido suite",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alessandro Chitolina",
+            "email": "alekitto@gmail.com"
+        },
+        {
+            "name": "Massimiliano Braglia",
+            "email": "massimiliano.braglia@gmail.com"
+        }
+    ],
+    "scripts": {
+        "phpstan": "phpstan analyse src/ -c vendor/solido/php-coding-standards/phpstan.neon --level=8 --no-progress -vvv --memory-limit=2048M",
+        "cscheck": "vendor/bin/phpcs --standard=Solido src/",
+        "csfix": "vendor/bin/phpcbf --standard=Solido src/"
+    },
+    "require": {
+        "php": "^7.4",
+        "thecodingmachine/safe": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.1|^9.0",
+        "roave/security-advisories": "dev-master",
+        "solido/php-coding-standards": "dev-master",
+        "symfony/form": "^5.0",
+        "symfony/http-foundation": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Solido\\Common\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Solido\\Common\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "archive": {
+        "exclude": [ ".gitignore", ".travis.yml", "tests" ]
+    }
+}
