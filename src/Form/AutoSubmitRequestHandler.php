@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Solido\Common\Form;
 
+use Solido\BodyConverter\BodyConverter;
+use Solido\BodyConverter\BodyConverterInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -13,6 +15,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use function call_user_func;
+use function class_exists;
 use function is_array;
 use function Safe\array_replace_recursive;
 
@@ -22,10 +25,16 @@ use function Safe\array_replace_recursive;
 final class AutoSubmitRequestHandler implements RequestHandlerInterface
 {
     private ServerParams $serverParams;
+    private ?BodyConverterInterface $bodyConverter;
 
-    public function __construct(?ServerParams $serverParams = null)
+    public function __construct(?ServerParams $serverParams = null, ?BodyConverterInterface $bodyConverter = null)
     {
+        if ($bodyConverter === null && class_exists(BodyConverter::class)) {
+            $bodyConverter = new BodyConverter();
+        }
+
         $this->serverParams = $serverParams ?? new ServerParams();
+        $this->bodyConverter = $bodyConverter;
     }
 
     /**
@@ -33,7 +42,9 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
      */
     public function handleRequest(FormInterface $form, $request = null): void
     {
-        if (! $request instanceof Request) {
+        if ($request === null) {
+            $request = Request::createFromGlobals();
+        } elseif (! $request instanceof Request) {
             throw new UnexpectedTypeException($request, Request::class);
         }
 
@@ -75,12 +86,13 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
                 return;
             }
 
+            $parameterBag = $this->bodyConverter !== null ? $this->bodyConverter->decode($request) : $request->request;
             if ($name === '') {
-                $params = $request->request->all();
+                $params = $parameterBag->all();
                 $files = $request->files->all();
             } elseif ($request->request->has($name) || $request->files->has($name)) {
                 $default = $form->getConfig()->getCompound() ? [] : null;
-                $params = $request->request->get($name, $default);
+                $params = $parameterBag->get($name, $default);
                 $files = $request->files->get($name, $default);
             } else {
                 // Don't submit the form if it is not present in the request
@@ -90,7 +102,7 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
             if (is_array($params) && is_array($files)) {
                 $data = array_replace_recursive($params, $files);
             } else {
-                $data = $params ?: $files;
+                $data = $params ?? $files;
             }
         }
 

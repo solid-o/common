@@ -25,6 +25,7 @@
     "require-dev": {
         "phpunit/phpunit": "^8.1|^9.0",
         "roave/security-advisories": "dev-master",
+        "solido/body-converter": "dev-master",
         "solido/php-coding-standards": "dev-master",
         "symfony/form": "^5.0",
         "symfony/http-foundation": "^5.0"

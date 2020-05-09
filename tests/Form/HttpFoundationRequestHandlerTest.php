@@ -9,12 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTest
 {
-    public function testRequestShouldNotBeNull(): void
-    {
-        $this->expectException(UnexpectedTypeException::class);
-        $this->requestHandler->handleRequest($this->createForm('name', 'GET'));
-    }
-
     public function testRequestShouldBeInstanceOfRequest(): void
     {
         $this->expectException(UnexpectedTypeException::class);
