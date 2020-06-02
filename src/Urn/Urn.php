@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Solido\Common;
+namespace Solido\Common\Urn;
 
 use InvalidArgumentException;
 use function array_shift;
