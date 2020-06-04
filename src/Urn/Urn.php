@@ -75,7 +75,7 @@ class Urn
             return false;
         }
 
-        return (bool) preg_match('/^urn:' . preg_quote(self::$domain, '/') . ':.*:.*:.*:.*:.*$/', $idOrUrn);
+        return (bool) preg_match('/^urn:' . preg_quote(static::$domain, '/') . ':.*:.*:.*:.*:.*$/', $idOrUrn);
     }
 
     /**
@@ -88,7 +88,7 @@ class Urn
     private static function parseUrn($idOrUrn): array
     {
         $idOrUrn = (string) $idOrUrn;
-        if (! preg_match('/^urn:' . preg_quote(self::$domain, '/') . ':(.*):(.*):(.*):(.*):(.*)$/', $idOrUrn, $matches)) {
+        if (! preg_match('/^urn:' . preg_quote(static::$domain, '/') . ':(.*):(.*):(.*):(.*):(.*)$/', $idOrUrn, $matches)) {
             throw new InvalidArgumentException('Not an urn');
         }
 
