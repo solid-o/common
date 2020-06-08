@@ -6,6 +6,9 @@ namespace Solido\Common\Urn;
 
 use InvalidArgumentException;
 use function array_shift;
+use function get_class;
+use function gettype;
+use function is_object;
 use function is_string;
 use function preg_quote;
 use function Safe\preg_match;
@@ -23,8 +26,9 @@ class Urn
 
     /**
      * @param mixed $idOrUrn
+     * @param string|UrnGeneratorInterface $owner
      */
-    public function __construct($idOrUrn, ?string $class = null, ?string $owner = null, ?string $tenant = null, ?string $partition = null)
+    public function __construct($idOrUrn, ?string $class = null, $owner = null, ?string $tenant = null, ?string $partition = null)
     {
         if ($idOrUrn instanceof self) {
             $this->id = $idOrUrn->id;
@@ -34,6 +38,17 @@ class Urn
             $this->partition = $idOrUrn->partition;
 
             return;
+        }
+
+        if ($owner !== null) {
+            if ($owner instanceof UrnGeneratorInterface) {
+                $owner = (string) $owner->getUrn()->id;
+            }
+
+            if (! is_string($owner)) {
+                // @phpstan-ignore-next-line
+                throw new InvalidArgumentException(sprintf('Owner argument must be an instance of %s or string, %s given', UrnGeneratorInterface::class, is_object($owner) ? get_class($owner) : gettype($owner)));
+            }
         }
 
         if (self::isUrn($idOrUrn)) {
