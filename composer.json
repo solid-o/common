@@ -23,10 +23,12 @@
         "thecodingmachine/safe": "^1.1"
     },
     "require-dev": {
+        "doctrine/persistence": "^1.0",
         "phpunit/phpunit": "^8.1|^9.0",
         "roave/security-advisories": "dev-master",
         "solido/body-converter": "dev-master",
         "solido/php-coding-standards": "dev-master",
+        "symfony/config": "^4.4|^5.0",
         "symfony/form": "^5.0",
         "symfony/http-foundation": "^5.0"
     },
