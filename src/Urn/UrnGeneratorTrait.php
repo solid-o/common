@@ -39,7 +39,7 @@ trait UrnGeneratorTrait
      * Gets the urn class.
      * Defaults to a snake case version of the class name.
      */
-    public function getUrnClass(): string
+    public static function getUrnClass(): string
     {
         $reflectionClass = new ReflectionClass(static::class);
         if ($reflectionClass->isSubclassOf(ProxyInterface::class)) {
@@ -59,6 +59,6 @@ trait UrnGeneratorTrait
      */
     public function getUrn(): Urn
     {
-        return new Urn($this->getUrnId(), $this->getUrnClass(), $this->getUrnOwner(), $this->getUrnTenant(), $this->getUrnPartition());
+        return new Urn($this->getUrnId(), static::getUrnClass(), $this->getUrnOwner(), $this->getUrnTenant(), $this->getUrnPartition());
     }
 }
