@@ -18,7 +18,7 @@ use function Safe\preg_replace;
 use function Safe\sprintf;
 use function var_export;
 
-class UrnConverter
+class UrnConverter implements UrnConverterInterface
 {
     /** @var ManagerRegistry[] */
     private array $managerRegistries;
@@ -37,6 +37,8 @@ class UrnConverter
 
     /**
      * Gets the urn class to entity map.
+     *
+     * @internal
      *
      * @return string[]
      */
@@ -57,10 +59,6 @@ class UrnConverter
         return require $cache->getPath();
     }
 
-    /**
-     * Gets an item from its urn.
-     * If not found an.
-     */
     public function getItemFromUrn(Urn $value, ?string $acceptable = null): object
     {
         $map = $this->getUrnClassMap();
