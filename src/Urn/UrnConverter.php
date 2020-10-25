@@ -12,6 +12,7 @@ use Symfony\Component\Config\ConfigCacheFactoryInterface;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Config\Resource\ReflectionClassResource;
 use Symfony\Component\Config\Resource\ResourceInterface;
+
 use function assert;
 use function mb_strtolower;
 use function Safe\preg_replace;
@@ -44,7 +45,7 @@ class UrnConverter implements UrnConverterInterface
      */
     public function getUrnClassMap(?string $cacheDir = null): array
     {
-        $cacheDir = $cacheDir ?? $this->cacheDir;
+        $cacheDir ??= $this->cacheDir;
         $cache = $this->configCache->cache($cacheDir . '/urn/class_to_object.php', function (ConfigCacheInterface $cache) {
             $resources = [];
             $map = [];

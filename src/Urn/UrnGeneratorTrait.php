@@ -6,6 +6,7 @@ namespace Solido\Common\Urn;
 
 use ProxyManager\Proxy\ProxyInterface;
 use ReflectionClass;
+
 use function mb_strtolower;
 use function preg_replace;
 

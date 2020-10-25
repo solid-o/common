@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace Solido\Common\Urn;
 
 use InvalidArgumentException;
+
 use function array_shift;
 use function get_class;
 use function gettype;
 use function is_object;
 use function is_string;
-use function preg_quote;
 use function Safe\preg_match;
 use function Safe\sprintf;
 
 class Urn
 {
-    public static string $domain = '';
+    public static string $defaultDomain = '';
 
     public string $id;
+    public string $domain;
     public ?string $partition;
     public ?string $tenant;
     public ?string $owner;
@@ -28,7 +29,7 @@ class Urn
      * @param mixed $idOrUrn
      * @param string|UrnGeneratorInterface $owner
      */
-    public function __construct($idOrUrn, ?string $class = null, $owner = null, ?string $tenant = null, ?string $partition = null)
+    public function __construct($idOrUrn, ?string $class = null, $owner = null, ?string $tenant = null, ?string $partition = null, ?string $domain = null)
     {
         if ($idOrUrn instanceof self) {
             $this->id = $idOrUrn->id;
@@ -36,6 +37,7 @@ class Urn
             $this->owner = $idOrUrn->owner;
             $this->tenant = $idOrUrn->tenant;
             $this->partition = $idOrUrn->partition;
+            $this->domain = $idOrUrn->domain;
 
             return;
         }
@@ -52,7 +54,7 @@ class Urn
         }
 
         if (self::isUrn($idOrUrn)) {
-            [$partition, $tenant, $owner, $class, $idOrUrn] = self::parseUrn($idOrUrn);
+            [$domain, $partition, $tenant, $owner, $class, $idOrUrn] = self::parseUrn($idOrUrn);
         }
 
         $this->id = $idOrUrn;
@@ -60,13 +62,14 @@ class Urn
         $this->owner = $owner;
         $this->tenant = $tenant;
         $this->partition = $partition;
+        $this->domain = $domain ?? static::$defaultDomain;
     }
 
     public function __toString(): string
     {
         return sprintf(
             'urn:%s:%s:%s:%s:%s:%s',
-            static::$domain,
+            $this->domain,
             $this->partition,
             $this->tenant,
             $this->owner,
@@ -90,7 +93,7 @@ class Urn
             return false;
         }
 
-        return (bool) preg_match('/^urn:' . preg_quote(static::$domain, '/') . ':.*:.*:.*:.*:.*$/', $idOrUrn);
+        return (bool) preg_match('/^urn:.*:.*:.*:.*:.*:.*$/', $idOrUrn);
     }
 
     /**
@@ -103,7 +106,7 @@ class Urn
     private static function parseUrn($idOrUrn): array
     {
         $idOrUrn = (string) $idOrUrn;
-        if (! preg_match('/^urn:' . preg_quote(static::$domain, '/') . ':(.*):(.*):(.*):(.*):(.*)$/', $idOrUrn, $matches)) {
+        if (! preg_match('/^urn:(.*):(.*):(.*):(.*):(.*):(.*)$/', $idOrUrn, $matches)) {
             throw new InvalidArgumentException('Not an urn');
         }
 
