@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Solido\Common\Urn;
 
+use Doctrine\ORM\Mapping\ClassMetadata as ORMMetadata;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Solido\Common\Exception\InvalidConfigurationException;
@@ -105,6 +106,10 @@ class UrnConverter implements UrnConverterInterface
             $metadata = $objectManager->getMetadataFactory()->getAllMetadata();
 
             foreach ($metadata as $classMetadata) {
+                if ($classMetadata instanceof ORMMetadata && $classMetadata->isInheritanceTypeSingleTable() && $classMetadata->rootEntityName !== $classMetadata->name) {
+                    continue;
+                }
+
                 $reflectionClass = $classMetadata->getReflectionClass();
 
                 if ($reflectionClass->hasMethod('getUrnClass')) {
