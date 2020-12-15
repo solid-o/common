@@ -46,7 +46,10 @@ class UrnConverter implements UrnConverterInterface
      */
     public function getUrnClassMap(?string $cacheDir = null): array
     {
-        $cacheDir ??= $this->cacheDir;
+        if (empty($cacheDir)) {
+            $cacheDir = $this->cacheDir;
+        }
+
         $cache = $this->configCache->cache($cacheDir . '/urn/class_to_object.php', function (ConfigCacheInterface $cache) {
             $resources = [];
             $map = [];
