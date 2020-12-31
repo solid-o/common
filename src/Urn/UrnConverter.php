@@ -43,6 +43,8 @@ class UrnConverter implements UrnConverterInterface
      * @internal
      *
      * @return string[]
+     *
+     * @phpstan-return class-string[]
      */
     public function getUrnClassMap(?string $cacheDir = null): array
     {
