@@ -69,8 +69,9 @@ class UrnConverter implements UrnConverterInterface
     public function getItemFromUrn(Urn $value, ?string $acceptable = null): object
     {
         $map = $this->getUrnClassMap();
-        $class = $map[$value->class] ?? null;
 
+        /** @phpstan-var class-string|null $class */
+        $class = $map[$value->class] ?? null;
         if ($class === null) {
             throw new ResourceNotFoundException('Invalid class ' . $value->class);
         }
