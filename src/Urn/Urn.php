@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Solido\Common\Urn;
 
 use InvalidArgumentException;
+use Stringable;
 
 use function array_shift;
 use function get_class;
@@ -14,7 +15,7 @@ use function is_string;
 use function Safe\preg_match;
 use function Safe\sprintf;
 
-class Urn
+class Urn implements Stringable
 {
     public static string $defaultDomain = '';
 
@@ -27,7 +28,7 @@ class Urn
 
     /**
      * @param mixed $idOrUrn
-     * @param string|UrnGeneratorInterface $owner
+     * @param string|Stringable|UrnGeneratorInterface $owner
      */
     public function __construct($idOrUrn, ?string $class = null, $owner = null, ?string $tenant = null, ?string $partition = null, ?string $domain = null)
     {
