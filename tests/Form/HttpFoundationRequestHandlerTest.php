@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Solido\Common\Tests\Form;
 
+use stdClass;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\RequestHandlerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -12,7 +15,7 @@ abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTe
     public function testRequestShouldBeInstanceOfRequest(): void
     {
         $this->expectException(UnexpectedTypeException::class);
-        $this->requestHandler->handleRequest($this->createForm('name', 'GET'), new \stdClass());
+        $this->requestHandler->handleRequest($this->createForm('name', 'GET'), new stdClass());
     }
 
     protected function setRequestData($method, $data, $files = []): void
@@ -24,7 +27,7 @@ abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTe
 
     protected function getUploadedFile($suffix = ''): UploadedFile
     {
-        return new UploadedFile(__DIR__.'/../Fixtures/foo'.$suffix, 'foo'.$suffix);
+        return new UploadedFile(__DIR__ . '/../Fixtures/foo' . $suffix, 'foo' . $suffix);
     }
 
     protected function getInvalidFile(): string
@@ -34,6 +37,6 @@ abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTe
 
     protected function getFailedUploadedFile($errorCode): UploadedFile
     {
-        return new UploadedFile(__DIR__.'/../Fixtures/foo', 'foo', null, $errorCode, true);
+        return new UploadedFile(__DIR__ . '/../Fixtures/foo', 'foo', null, $errorCode, true);
     }
 }

@@ -15,6 +15,7 @@ use Symfony\Component\Config\Resource\ReflectionClassResource;
 use Symfony\Component\Config\Resource\ResourceInterface;
 
 use function assert;
+use function in_array;
 use function mb_strtolower;
 use function Safe\preg_replace;
 use function Safe\sprintf;
@@ -24,6 +25,10 @@ class UrnConverter implements UrnConverterInterface
 {
     /** @var ManagerRegistry[] */
     private array $managerRegistries;
+
+    /** @var string[]|null */
+    private ?array $urnDomains = null;
+
     private ConfigCacheFactoryInterface $configCache;
     private string $cacheDir;
 
@@ -35,6 +40,11 @@ class UrnConverter implements UrnConverterInterface
         $this->managerRegistries = $managerRegistries;
         $this->configCache = $configCache;
         $this->cacheDir = $cacheDir;
+    }
+
+    public function setDomains(string ...$domains): void
+    {
+        $this->urnDomains = $domains;
     }
 
     /**
@@ -68,17 +78,21 @@ class UrnConverter implements UrnConverterInterface
 
     public function getItemFromUrn(Urn $value, ?string $acceptable = null): object
     {
+        if ($this->urnDomains && ! in_array($value->domain, $this->urnDomains, true)) {
+            throw new ResourceNotFoundException(sprintf('Invalid domain "%s"', $value->domain));
+        }
+
         $map = $this->getUrnClassMap();
 
         /** @phpstan-var class-string|null $class */
         $class = $map[$value->class] ?? null;
         if ($class === null) {
-            throw new ResourceNotFoundException('Invalid class ' . $value->class);
+            throw new ResourceNotFoundException(sprintf('Invalid class "%s"', $value->class));
         }
 
         $result = $this->findManager($class)->find($class, $value->id);
         if ($result === null || ($acceptable !== null && ! $result instanceof $acceptable)) {
-            throw new ResourceNotFoundException('Cannot find item with urn ' . $value);
+            throw new ResourceNotFoundException(sprintf('Cannot find item with urn "%s"', (string) $value));
         }
 
         return $result;
@@ -112,7 +126,11 @@ class UrnConverter implements UrnConverterInterface
             $metadata = $objectManager->getMetadataFactory()->getAllMetadata();
 
             foreach ($metadata as $classMetadata) {
-                if ($classMetadata instanceof ORMMetadata && $classMetadata->isInheritanceTypeSingleTable() && $classMetadata->rootEntityName !== $classMetadata->name) {
+                if (
+                    $classMetadata instanceof ORMMetadata &&
+                    $classMetadata->isInheritanceTypeSingleTable() &&
+                    $classMetadata->rootEntityName !== $classMetadata->name
+                ) {
                     continue;
                 }
 

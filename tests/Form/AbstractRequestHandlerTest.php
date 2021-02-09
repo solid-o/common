@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Solido\Common\Tests\Form;
 
@@ -17,15 +19,24 @@ use Symfony\Component\Form\RequestHandlerInterface;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\Request;
 
+use function iterator_to_array;
+
+use const UPLOAD_ERR_CANT_WRITE;
+use const UPLOAD_ERR_EXTENSION;
+use const UPLOAD_ERR_FORM_SIZE;
+use const UPLOAD_ERR_INI_SIZE;
+use const UPLOAD_ERR_NO_FILE;
+use const UPLOAD_ERR_NO_TMP_DIR;
+use const UPLOAD_ERR_OK;
+use const UPLOAD_ERR_PARTIAL;
+
 abstract class AbstractRequestHandlerTest extends TestCase
 {
     protected RequestHandlerInterface $requestHandler;
     protected FormFactory $factory;
     protected ?Request $request;
 
-    /**
-     * @var MockObject|ServerParams
-     */
+    /** @var MockObject|ServerParams */
     protected object $serverParams;
 
     protected function setUp(): void
@@ -57,9 +68,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
     {
         $form = $this->createForm('param1', $method);
 
-        $this->setRequestData($method, [
-            'param1' => 'DATA',
-        ]);
+        $this->setRequestData($method, ['param1' => 'DATA']);
 
         $this->requestHandler->handleRequest($form, $this->request);
 
@@ -74,11 +83,9 @@ abstract class AbstractRequestHandlerTest extends TestCase
     {
         $form = $this->createForm('param1', $method);
 
-        $otherMethod = 'POST' === $method ? 'PUT' : 'POST';
+        $otherMethod = $method === 'POST' ? 'PUT' : 'POST';
 
-        $this->setRequestData($otherMethod, [
-            'param1' => 'DATA',
-        ]);
+        $this->setRequestData($otherMethod, ['param1' => 'DATA']);
 
         $this->requestHandler->handleRequest($form, $this->request);
 
@@ -150,7 +157,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         self::assertTrue($form->get('param1')->isSubmitted());
         self::assertSame('submitted value', $form->get('param1')->getData());
 
-        if ('PATCH' === $method) {
+        if ($method === 'PATCH') {
             self::assertFalse($form->get('param2')->isSubmitted());
         } else {
             self::assertTrue($form->get('param2')->isSubmitted());
@@ -168,9 +175,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $form->add($this->createForm('param1'));
         $form->add($this->createForm('param2'));
 
-        $this->setRequestData($method, [
-            'paramx' => 'submitted value',
-        ]);
+        $this->setRequestData($method, ['paramx' => 'submitted value']);
 
         $this->requestHandler->handleRequest($form, $this->request);
 
@@ -188,13 +193,9 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $file = $this->getUploadedFile();
 
         $this->setRequestData($method, [
-            'param1' => [
-                'field1' => 'DATA',
-            ],
+            'param1' => ['field1' => 'DATA'],
         ], [
-            'param1' => [
-                'field2' => $file,
-            ],
+            'param1' => ['field2' => $file],
         ]);
 
         $this->requestHandler->handleRequest($form, $this->request);
@@ -212,11 +213,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $form = $this->createForm('param1', $method);
         $file = $this->getUploadedFile();
 
-        $this->setRequestData($method, [
-            'param1' => 'DATA',
-        ], [
-            'param1' => $file,
-        ]);
+        $this->setRequestData($method, ['param1' => 'DATA'], ['param1' => $file]);
 
         $this->requestHandler->handleRequest($form, $this->request);
 
@@ -234,11 +231,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
                      ->getForm();
         $file = $this->getUploadedFile();
 
-        $this->setRequestData($method, [
-            'param1' => null,
-        ], [
-            'param1' => $file,
-        ]);
+        $this->setRequestData($method, ['param1' => null], ['param1' => $file]);
 
         $this->requestHandler->handleRequest($form, $this->request);
 
@@ -256,9 +249,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
                      ->getForm();
         $file = $this->getUploadedFile();
 
-        $this->setRequestData($method, [
-            'param1' => null,
-        ], [
+        $this->setRequestData($method, ['param1' => null], [
             'param2' => $this->getUploadedFile('2'),
             'param1' => $file,
             'param3' => $this->getUploadedFile('3'),
@@ -279,11 +270,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $fileForm = $this->createBuilder('document', false, ['allow_file_upload' => true])->getForm();
         $form->add($fileForm);
         $file = $this->getUploadedFile();
-        $this->setRequestData($method, [
-            'document' => null,
-        ], [
-            'document' => $file,
-        ]);
+        $this->setRequestData($method, ['document' => null], ['document' => $file]);
         $this->requestHandler->handleRequest($form, $this->request);
 
         self::assertTrue($form->isSubmitted());
@@ -312,7 +299,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
             $error = new FormError($options['post_max_size_message'], null, $errorParams);
             $error->setOrigin($form);
 
-            self::assertEquals([$error], \iterator_to_array($form->getErrors()));
+            self::assertEquals([$error], iterator_to_array($form->getErrors()));
             self::assertTrue($form->isSubmitted());
         } else {
             self::assertCount(0, $form->getErrors());
@@ -379,7 +366,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
     {
         $config = $this->createBuilder($name, $compound);
 
-        if (null !== $method) {
+        if ($method !== null) {
             $config->setMethod($method);
         }
 

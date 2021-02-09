@@ -1,9 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Solido\Common\Tests\Urn;
 
-use Solido\Common\Urn\Urn;
 use PHPUnit\Framework\TestCase;
+use Solido\Common\Urn\Urn;
 
 class UrnTest extends TestCase
 {

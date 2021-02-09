@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Solido\Common\Tests\Form;
 
@@ -38,10 +40,6 @@ class AutoSubmitRequestHandlerTest extends HttpFoundationRequestHandlerTest
         $_SERVER = self::$serverBackup;
     }
 
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getRequestHandler(): RequestHandlerInterface
     {
         return new AutoSubmitRequestHandler($this->serverParams);
@@ -64,9 +62,7 @@ class AutoSubmitRequestHandlerTest extends HttpFoundationRequestHandlerTest
         $form->add($this->createForm('param1'));
         $form->add($this->createForm('param2'));
 
-        $this->setRequestData($method, [
-            'paramx' => 'submitted value',
-        ]);
+        $this->setRequestData($method, ['paramx' => 'submitted value']);
 
         $this->requestHandler->handleRequest($form, $this->request);
 
@@ -83,9 +79,7 @@ class AutoSubmitRequestHandlerTest extends HttpFoundationRequestHandlerTest
         $form->add($this->createForm('param2'));
 
         $_SERVER['REQUEST_METHOD'] = $method;
-        $_POST = [
-            'paramx' => 'submitted value',
-        ];
+        $_POST = ['paramx' => 'submitted value'];
 
         $this->requestHandler->handleRequest($form, null);
 
