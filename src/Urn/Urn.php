@@ -8,9 +8,8 @@ use InvalidArgumentException;
 use Stringable;
 
 use function array_shift;
-use function get_class;
-use function gettype;
-use function is_object;
+use function assert;
+use function get_debug_type;
 use function is_string;
 use function Safe\preg_match;
 use function Safe\sprintf;
@@ -49,8 +48,7 @@ class Urn implements Stringable
             }
 
             if (! is_string($owner)) {
-                // @phpstan-ignore-next-line
-                throw new InvalidArgumentException(sprintf('Owner argument must be an instance of %s or string, %s given', UrnGeneratorInterface::class, is_object($owner) ? get_class($owner) : gettype($owner)));
+                throw new InvalidArgumentException(sprintf('Owner argument must be an instance of %s or string, %s given', UrnGeneratorInterface::class, get_debug_type($owner)));
             }
         }
 
@@ -66,7 +64,7 @@ class Urn implements Stringable
         $this->domain = $domain ?? static::$defaultDomain;
     }
 
-    public function __toString(): string
+    public function toString(): string
     {
         return sprintf(
             'urn:%s:%s:%s:%s:%s:%s',
@@ -77,6 +75,11 @@ class Urn implements Stringable
             $this->class,
             $this->id
         );
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 
     /**
@@ -107,9 +110,9 @@ class Urn implements Stringable
     private static function parseUrn($idOrUrn): array
     {
         $idOrUrn = (string) $idOrUrn;
-        if (! preg_match('/^urn:(.*):(.*):(.*):(.*):(.*):(.*)$/', $idOrUrn, $matches)) {
-            throw new InvalidArgumentException('Not an urn');
-        }
+
+        $result = preg_match('/^urn:(.*):(.*):(.*):(.*):(.*):(.*)$/', $idOrUrn, $matches);
+        assert($result === 1);
 
         array_shift($matches);
 
