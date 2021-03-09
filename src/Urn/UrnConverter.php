@@ -135,6 +135,9 @@ class UrnConverter implements UrnConverterInterface
                 }
 
                 $reflectionClass = $classMetadata->getReflectionClass();
+                if (! $reflectionClass->implementsInterface(UrnGeneratorInterface::class)) {
+                    continue;
+                }
 
                 if ($reflectionClass->hasMethod('getUrnClass')) {
                     $method = $reflectionClass->getMethod('getUrnClass');

@@ -142,6 +142,28 @@ class UrnConverterTest extends TestCase
 
         $this->converter->getItemFromUrn(new Urn('test-42', 'user', null, null, null, 'example-application'));
     }
+
+    public function testNonUrnGeneratorsAreExcludedFromClassMap(): void
+    {
+        $this->managerRegistry->getManagers()->willReturn([
+            $manager = $this->prophesize(ObjectManager::class),
+        ]);
+
+        $this->managerRegistry->getManagerForClass(TestEntity::class)->willReturn($manager);
+
+        $manager->getMetadataFactory()->willReturn($factory = $this->prophesize(AbstractClassMetadataFactory::class));
+        $factory->getAllMetadata()->willReturn([
+            $metadata = new ClassMetadata(TestEntity::class),
+            $metadata2 = new ClassMetadata(TestNonUrnEntity::class),
+        ]);
+
+        $metadata->wakeupReflection(new RuntimeReflectionService());
+        $metadata2->wakeupReflection(new RuntimeReflectionService());
+
+        self::assertEquals([
+            'user' => TestEntity::class,
+        ], $this->converter->getUrnClassMap());
+    }
 }
 
 class TestEntity implements UrnGeneratorInterface
@@ -154,4 +176,8 @@ class TestEntity implements UrnGeneratorInterface
     public function getUrn(): Urn
     {
     }
+}
+
+class TestNonUrnEntity
+{
 }
