@@ -37,6 +37,14 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
         return $header[0] ?? 'application/x-www-form-urlencoded';
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getHeader(string $name): array
+    {
+        return $this->request->getHeader($name);
+    }
+
     public function getRequestMethod(): string
     {
         return $this->request->getMethod();

@@ -14,6 +14,13 @@ interface RequestAdapterInterface
     public function getContentType(): string;
 
     /**
+     * Gets the specified header. Always returns an array of strings.
+     *
+     * @return string[]
+     */
+    public function getHeader(string $name): array;
+
+    /**
      * Gets the request method.
      */
     public function getRequestMethod(): string;

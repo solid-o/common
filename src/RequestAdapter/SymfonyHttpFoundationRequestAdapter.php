@@ -32,6 +32,14 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
         return $contentType;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getHeader(string $name): array
+    {
+        return $this->request->headers->all($name);
+    }
+
     public function getRequestMethod(): string
     {
         return $this->request->getMethod();
