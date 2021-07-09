@@ -23,6 +23,22 @@ class PsrResponseAdapter implements ResponseAdapterInterface
     /**
      * {@inheritdoc}
      */
+    public function getHeaders(): array
+    {
+        return $this->response->getHeaders();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHeader(string $name): array
+    {
+        return $this->response->getHeader($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setHeaders(array $headers): ResponseAdapterInterface
     {
         foreach ($headers as $name => $values) {

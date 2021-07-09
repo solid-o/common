@@ -23,6 +23,26 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
     /**
      * {@inheritdoc}
      */
+    public function getHeaders(): array
+    {
+        return $this->response->headers->all();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHeader(string $name): array
+    {
+        if (! $this->response->headers->has($name)) {
+            return [];
+        }
+
+        return $this->response->headers->all($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setHeaders(array $headers): ResponseAdapterInterface
     {
         $this->response->headers->add($headers);
