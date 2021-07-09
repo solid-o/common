@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53fefea6dbaca85f15ce2b32eb71af8f",
+    "content-hash": "73f21981b476c45400c802b45273ae82",
     "packages": [
         {
             "name": "symfony/polyfill-php80",
@@ -1428,16 +1428,16 @@
         },
         {
             "name": "laminas/laminas-code",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "2b0bb59ade31a045fd3ff0097dc558bb896f6596"
+                "reference": "0919a1b7ca2c262f07557f70cca810689b0d3b43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/2b0bb59ade31a045fd3ff0097dc558bb896f6596",
-                "reference": "2b0bb59ade31a045fd3ff0097dc558bb896f6596",
+                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/0919a1b7ca2c262f07557f70cca810689b0d3b43",
+                "reference": "0919a1b7ca2c262f07557f70cca810689b0d3b43",
                 "shasum": ""
             },
             "require": {
@@ -1491,7 +1491,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-06-17T13:39:43+00:00"
+            "time": "2021-07-09T09:19:31+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2219,28 +2219,27 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "0.5.4",
+            "version": "0.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "e352d065af1ae9b41c12d1dfd309e90f7b1f55c9"
+                "reference": "ea0b17460ec38e20d7eb64e7ec49b5d44af5d28c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/e352d065af1ae9b41c12d1dfd309e90f7b1f55c9",
-                "reference": "e352d065af1ae9b41c12d1dfd309e90f7b1f55c9",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/ea0b17460ec38e20d7eb64e7ec49b5d44af5d28c",
+                "reference": "ea0b17460ec38e20d7eb64e7ec49b5d44af5d28c",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0"
             },
             "require-dev": {
-                "phing/phing": "^2.16.3",
                 "php-parallel-lint/php-parallel-lint": "^1.2",
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "^0.12.60",
+                "phpstan/phpstan": "^0.12.87",
                 "phpstan/phpstan-strict-rules": "^0.12.5",
-                "phpunit/phpunit": "^7.5.20",
+                "phpunit/phpunit": "^9.5",
                 "symfony/process": "^5.2"
             },
             "type": "library",
@@ -2263,9 +2262,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/0.5.4"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/0.5.5"
             },
-            "time": "2021-04-03T14:46:19+00:00"
+            "time": "2021-06-11T13:24:46+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -4348,32 +4347,32 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "7.0.9",
+            "version": "7.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "d59652e000bcde019459dcba677de030867d0232"
+                "reference": "4607562c9d217a1026c9effde4fc78065571fd19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/d59652e000bcde019459dcba677de030867d0232",
-                "reference": "d59652e000bcde019459dcba677de030867d0232",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/4607562c9d217a1026c9effde4fc78065571fd19",
+                "reference": "4607562c9d217a1026c9effde4fc78065571fd19",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7",
                 "php": "^7.1 || ^8.0",
-                "phpstan/phpdoc-parser": "0.5.1 - 0.5.4",
+                "phpstan/phpdoc-parser": "0.5.1 - 0.5.5",
                 "squizlabs/php_codesniffer": "^3.6.0"
             },
             "require-dev": {
                 "phing/phing": "2.16.4",
                 "php-parallel-lint/php-parallel-lint": "1.3.0",
-                "phpstan/phpstan": "0.12.88",
+                "phpstan/phpstan": "0.12.91",
                 "phpstan/phpstan-deprecation-rules": "0.12.6",
-                "phpstan/phpstan-phpunit": "0.12.19",
-                "phpstan/phpstan-strict-rules": "0.12.9",
-                "phpunit/phpunit": "7.5.20|8.5.5|9.5.5"
+                "phpstan/phpstan-phpunit": "0.12.20",
+                "phpstan/phpstan-strict-rules": "0.12.10",
+                "phpunit/phpunit": "7.5.20|8.5.5|9.5.6"
             },
             "type": "phpcodesniffer-standard",
             "extra": {
@@ -4393,7 +4392,7 @@
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/7.0.9"
+                "source": "https://github.com/slevomat/coding-standard/tree/7.0.10"
             },
             "funding": [
                 {
@@ -4405,7 +4404,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-07T10:08:42+00:00"
+            "time": "2021-07-09T09:07:10+00:00"
         },
         {
             "name": "solido/body-converter",
@@ -4413,12 +4412,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/solid-o/body-converter.git",
-                "reference": "17b77aa865cf11ea1e9393ae016640b6dddf4db9"
+                "reference": "1e95621cae920eb80dea2e9c9c570dfb5208768d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/solid-o/body-converter/zipball/17b77aa865cf11ea1e9393ae016640b6dddf4db9",
-                "reference": "17b77aa865cf11ea1e9393ae016640b6dddf4db9",
+                "url": "https://api.github.com/repos/solid-o/body-converter/zipball/1e95621cae920eb80dea2e9c9c570dfb5208768d",
+                "reference": "1e95621cae920eb80dea2e9c9c570dfb5208768d",
                 "shasum": ""
             },
             "require": {
@@ -4431,6 +4430,7 @@
                 "phpunit/phpunit": "^9.4",
                 "psr/http-message": "^1.0",
                 "roave/security-advisories": "dev-master",
+                "solido/common": "dev-master",
                 "solido/php-coding-standards": "dev-master",
                 "symfony/http-foundation": "^4.4 || ^5.0"
             },
@@ -4465,7 +4465,7 @@
                 "issues": "https://github.com/solid-o/body-converter/issues",
                 "source": "https://github.com/solid-o/body-converter/tree/master"
             },
-            "time": "2021-07-05T21:18:03+00:00"
+            "time": "2021-07-09T08:34:37+00:00"
         },
         {
             "name": "solido/php-coding-standards",

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Solido\Common\RequestAdapter;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Solido\Common\Exception\InvalidArgumentException;
 use Solido\Common\Exception\NonExistentFileException;
 use Solido\Common\Exception\NonExistentParameterException;
+use Solido\Common\ResponseAdapter\PsrResponseAdapter;
+use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
 
 use function array_key_exists;
 use function get_object_vars;
@@ -18,10 +22,12 @@ use const UPLOAD_ERR_OK;
 class PsrServerRequestAdapter implements RequestAdapterInterface
 {
     private ServerRequestInterface $request;
+    private ?ResponseFactoryInterface $responseFactory;
 
-    public function __construct(ServerRequestInterface $request)
+    public function __construct(ServerRequestInterface $request, ?ResponseFactoryInterface $responseFactory)
     {
         $this->request = $request;
+        $this->responseFactory = $responseFactory;
     }
 
     public function getContentType(): string
@@ -131,5 +137,14 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
         }
 
         return $data->getError();
+    }
+
+    public function createResponse(): ResponseAdapterInterface
+    {
+        if ($this->responseFactory === null) {
+            throw new InvalidArgumentException('Could not find a response factory, response object cannot be created. Try to inject a valid response factory to the request adapter factory.');
+        }
+
+        return new PsrResponseAdapter($this->responseFactory->createResponse());
     }
 }

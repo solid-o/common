@@ -6,6 +6,8 @@ namespace Solido\Common\RequestAdapter;
 
 use Solido\Common\Exception\NonExistentFileException;
 use Solido\Common\Exception\NonExistentParameterException;
+use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
+use Solido\Common\ResponseAdapter\SymfonyHttpFoundationResponseAdapter;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -115,5 +117,10 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
         }
 
         return $data->getError();
+    }
+
+    public function createResponse(): ResponseAdapterInterface
+    {
+        return new SymfonyHttpFoundationResponseAdapter();
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Solido\Common\RequestAdapter;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Solido\BodyConverter\Exception\UnsupportedRequestObjectException;
@@ -15,6 +16,13 @@ use function Safe\sprintf;
 
 class RequestAdapterFactory implements RequestAdapterFactoryInterface
 {
+    private ?ResponseFactoryInterface $responseFactory;
+
+    public function __construct(?ResponseFactoryInterface $responseFactory = null)
+    {
+        $this->responseFactory = $responseFactory;
+    }
+
     public function factory(object $request): RequestAdapterInterface
     {
         if ($request instanceof Request) {
@@ -22,7 +30,7 @@ class RequestAdapterFactory implements RequestAdapterFactoryInterface
         }
 
         if ($request instanceof ServerRequestInterface) {
-            return new PsrServerRequestAdapter($request);
+            return new PsrServerRequestAdapter($request, $this->responseFactory);
         }
 
         throw new UnsupportedRequestObjectException(

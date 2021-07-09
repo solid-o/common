@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Solido\Common\RequestAdapter;
 
+use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
+
 interface RequestAdapterInterface
 {
     /**
@@ -79,4 +81,9 @@ interface RequestAdapterInterface
      * @param mixed $data
      */
     public static function getUploadFileError($data): ?int;
+
+    /**
+     * Creates a new empty response (adapter) object.
+     */
+    public function createResponse(): ResponseAdapterInterface;
 }
