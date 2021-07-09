@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Solido\BodyConverter\Exception\UnsupportedRequestObjectException;
-use Solido\Common\AdapterFactoryInterface;
 use Solido\Common\RequestAdapter\PsrServerRequestAdapter;
 use Solido\Common\RequestAdapter\RequestAdapterInterface;
 use Solido\Common\RequestAdapter\SymfonyHttpFoundationRequestAdapter;

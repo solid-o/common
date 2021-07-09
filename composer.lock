@@ -1428,16 +1428,16 @@
         },
         {
             "name": "laminas/laminas-code",
-            "version": "4.4.1",
+            "version": "4.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "0919a1b7ca2c262f07557f70cca810689b0d3b43"
+                "reference": "54251ab2b16c41c6980387839496b235f5f6e10b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/0919a1b7ca2c262f07557f70cca810689b0d3b43",
-                "reference": "0919a1b7ca2c262f07557f70cca810689b0d3b43",
+                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/54251ab2b16c41c6980387839496b235f5f6e10b",
+                "reference": "54251ab2b16c41c6980387839496b235f5f6e10b",
                 "shasum": ""
             },
             "require": {
@@ -1491,7 +1491,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-07-09T09:19:31+00:00"
+            "time": "2021-07-09T11:58:40+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -4412,12 +4412,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/solid-o/body-converter.git",
-                "reference": "1e95621cae920eb80dea2e9c9c570dfb5208768d"
+                "reference": "9de047b891e305c5b1be37f2270b52a81a61e742"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/solid-o/body-converter/zipball/1e95621cae920eb80dea2e9c9c570dfb5208768d",
-                "reference": "1e95621cae920eb80dea2e9c9c570dfb5208768d",
+                "url": "https://api.github.com/repos/solid-o/body-converter/zipball/9de047b891e305c5b1be37f2270b52a81a61e742",
+                "reference": "9de047b891e305c5b1be37f2270b52a81a61e742",
                 "shasum": ""
             },
             "require": {
@@ -4465,7 +4465,7 @@
                 "issues": "https://github.com/solid-o/body-converter/issues",
                 "source": "https://github.com/solid-o/body-converter/tree/master"
             },
-            "time": "2021-07-09T08:34:37+00:00"
+            "time": "2021-07-09T13:24:55+00:00"
         },
         {
             "name": "solido/php-coding-standards",
