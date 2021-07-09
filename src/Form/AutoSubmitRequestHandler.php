@@ -10,8 +10,8 @@ use Solido\BodyConverter\BodyConverter;
 use Solido\BodyConverter\BodyConverterInterface;
 use Solido\Common\Exception\InvalidArgumentException;
 use Solido\Common\Exception\NonExistentFileException;
-use Solido\Common\RequestAdapter\RequestAdapterFactory;
-use Solido\Common\RequestAdapter\RequestAdapterFactoryInterface;
+use Solido\Common\AdapterFactory;
+use Solido\Common\AdapterFactoryInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\RequestHandlerInterface;
@@ -31,12 +31,12 @@ use function Safe\sprintf;
 final class AutoSubmitRequestHandler implements RequestHandlerInterface
 {
     private ServerParams $serverParams;
-    private RequestAdapterFactoryInterface $adapterFactory;
+    private AdapterFactoryInterface $adapterFactory;
     private ?BodyConverterInterface $bodyConverter;
 
     public function __construct(
         ?ServerParams $serverParams = null,
-        ?RequestAdapterFactoryInterface $adapterFactory = null,
+        ?AdapterFactoryInterface $adapterFactory = null,
         ?BodyConverterInterface $bodyConverter = null
     ) {
         if ($bodyConverter === null && class_exists(BodyConverter::class)) {
@@ -44,7 +44,7 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
         }
 
         $this->serverParams = $serverParams ?? new ServerParams();
-        $this->adapterFactory = $adapterFactory ?? new RequestAdapterFactory(new Psr17Factory());
+        $this->adapterFactory = $adapterFactory ?? new AdapterFactory(new Psr17Factory());
         $this->bodyConverter = $bodyConverter;
     }
 

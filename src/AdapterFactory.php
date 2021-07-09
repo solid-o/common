@@ -2,19 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Solido\Common\RequestAdapter;
+namespace Solido\Common;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Solido\BodyConverter\Exception\UnsupportedRequestObjectException;
+use Solido\Common\AdapterFactoryInterface;
+use Solido\Common\RequestAdapter\PsrServerRequestAdapter;
+use Solido\Common\RequestAdapter\RequestAdapterInterface;
+use Solido\Common\RequestAdapter\SymfonyHttpFoundationRequestAdapter;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 
 use function get_class;
 use function Safe\sprintf;
 
-class RequestAdapterFactory implements RequestAdapterFactoryInterface
+class AdapterFactory implements AdapterFactoryInterface
 {
     private ?ResponseFactoryInterface $responseFactory;
 

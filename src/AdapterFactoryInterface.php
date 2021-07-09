@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Solido\Common\RequestAdapter;
+namespace Solido\Common;
 
-interface RequestAdapterFactoryInterface
+use Solido\Common\RequestAdapter\RequestAdapterInterface;
+
+interface AdapterFactoryInterface
 {
     /**
      * Creates an adapter for the given request.
