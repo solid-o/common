@@ -22,7 +22,13 @@ abstract class PsrServerRequestHandlerTest extends AbstractRequestHandlerTest
 
     protected function setRequestData($method, $data, $files = []): void
     {
-        $request = new ServerRequest($method, 'http://localhost/', [], $data);
+        $request = new ServerRequest($method, 'http://localhost/');
+        if ($method === 'GET') {
+            $request = $request->withQueryParams($data);
+        } else {
+            $request = $request->withParsedBody($data);
+        }
+
         $this->request = $request->withUploadedFiles($files);
     }
 

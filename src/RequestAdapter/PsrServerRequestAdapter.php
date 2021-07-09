@@ -13,6 +13,8 @@ use function array_key_exists;
 use function get_object_vars;
 use function is_object;
 
+use const UPLOAD_ERR_OK;
+
 class PsrServerRequestAdapter implements RequestAdapterInterface
 {
     private ServerRequestInterface $request;
@@ -124,7 +126,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
      */
     public static function getUploadFileError($data): ?int
     {
-        if (! $data instanceof UploadedFileInterface) {
+        if (! $data instanceof UploadedFileInterface || $data->getError() === UPLOAD_ERR_OK) {
             return null;
         }
 

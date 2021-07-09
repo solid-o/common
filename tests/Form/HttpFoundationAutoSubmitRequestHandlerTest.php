@@ -8,7 +8,7 @@ use Solido\Common\Form\AutoSubmitRequestHandler;
 use Symfony\Component\Form\RequestHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class AutoSubmitRequestHandlerTest extends HttpFoundationRequestHandlerTest
+class HttpFoundationAutoSubmitRequestHandlerTest extends HttpFoundationRequestHandlerTest
 {
     private static array $serverBackup;
 
