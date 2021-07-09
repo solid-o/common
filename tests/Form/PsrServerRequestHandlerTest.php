@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Solido\Common\Tests\Form;
 
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\UploadedFile;
 use Solido\Common\Exception\InvalidArgumentException;
 use stdClass;
 use Symfony\Component\Form\RequestHandlerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Request;
 
-abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTest
+use function Safe\filesize;
+
+abstract class PsrServerRequestHandlerTest extends AbstractRequestHandlerTest
 {
     public function testRequestShouldBeInstanceOfRequest(): void
     {
@@ -20,14 +22,17 @@ abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTe
 
     protected function setRequestData($method, $data, $files = []): void
     {
-        $this->request = Request::create('http://localhost', $method, $data, [], $files);
+        $request = new ServerRequest($method, 'http://localhost/', [], $data);
+        $this->request = $request->withUploadedFiles($files);
     }
 
     abstract protected function getRequestHandler(): RequestHandlerInterface;
 
     protected function getUploadedFile($suffix = ''): UploadedFile
     {
-        return new UploadedFile(__DIR__ . '/../Fixtures/foo' . $suffix, 'foo' . $suffix);
+        $fileName = __DIR__ . '/../Fixtures/foo' . $suffix;
+
+        return new UploadedFile($fileName, filesize($fileName), UPLOAD_ERR_OK, 'foo' . $suffix);
     }
 
     protected function getInvalidFile(): string
@@ -37,6 +42,8 @@ abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTe
 
     protected function getFailedUploadedFile($errorCode): UploadedFile
     {
-        return new UploadedFile(__DIR__ . '/../Fixtures/foo', 'foo', null, $errorCode, true);
+        $fileName = __DIR__ . '/../Fixtures/foo';
+
+        return new UploadedFile($fileName, filesize($fileName), $errorCode, 'foo');
     }
 }

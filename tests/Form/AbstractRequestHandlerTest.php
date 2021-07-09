@@ -34,7 +34,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
 {
     protected RequestHandlerInterface $requestHandler;
     protected FormFactory $factory;
-    protected ?Request $request;
+    protected ?object $request = null;
 
     /** @var MockObject|ServerParams */
     protected object $serverParams;

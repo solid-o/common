@@ -4,21 +4,25 @@ declare(strict_types=1);
 
 namespace Solido\Common\Form;
 
+use Psr\Http\Message\ServerRequestInterface;
 use Solido\BodyConverter\BodyConverter;
 use Solido\BodyConverter\BodyConverterInterface;
-use Symfony\Component\Form\Exception\UnexpectedTypeException;
+use Solido\Common\Exception\InvalidArgumentException;
+use Solido\Common\Exception\NonExistentFileException;
+use Solido\Common\RequestAdapter\RequestAdapterFactory;
+use Solido\Common\RequestAdapter\RequestAdapterFactoryInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\RequestHandlerInterface;
 use Symfony\Component\Form\Util\ServerParams;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 use function call_user_func;
 use function class_exists;
+use function get_debug_type;
 use function is_array;
 use function Safe\array_replace_recursive;
+use function Safe\sprintf;
 
 /**
  * @internal
@@ -26,15 +30,20 @@ use function Safe\array_replace_recursive;
 final class AutoSubmitRequestHandler implements RequestHandlerInterface
 {
     private ServerParams $serverParams;
+    private RequestAdapterFactoryInterface $adapterFactory;
     private ?BodyConverterInterface $bodyConverter;
 
-    public function __construct(?ServerParams $serverParams = null, ?BodyConverterInterface $bodyConverter = null)
-    {
+    public function __construct(
+        ?ServerParams $serverParams = null,
+        ?RequestAdapterFactoryInterface $adapterFactory = null,
+        ?BodyConverterInterface $bodyConverter = null
+    ) {
         if ($bodyConverter === null && class_exists(BodyConverter::class)) {
             $bodyConverter = new BodyConverter();
         }
 
         $this->serverParams = $serverParams ?? new ServerParams();
+        $this->adapterFactory = $adapterFactory ?? new RequestAdapterFactory();
         $this->bodyConverter = $bodyConverter;
     }
 
@@ -45,14 +54,16 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
     {
         if ($request === null) {
             $request = Request::createFromGlobals();
-        } elseif (! $request instanceof Request) {
-            throw new UnexpectedTypeException($request, Request::class);
+        } elseif (! $request instanceof Request && ! $request instanceof ServerRequestInterface) {
+            throw new InvalidArgumentException(sprintf('Expected argument of type "%s" or "%s", "%s" given', Request::class, ServerRequestInterface::class, get_debug_type($request)));
         }
+
+        $adapter = $this->adapterFactory->factory($request);
 
         $name = $form->getName();
         $method = $form->getConfig()->getMethod();
 
-        if ($request->getMethod() !== $method) {
+        if ($adapter->getRequestMethod() !== $method) {
             return;
         }
 
@@ -60,15 +71,15 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
         // from the query string. Otherwise we look for data in the request body.
         if ($method === Request::METHOD_GET || $method === Request::METHOD_HEAD || $method === Request::METHOD_TRACE) {
             if ($name === '') {
-                $data = $request->query->all();
+                $data = $adapter->getQueryParams();
             } else {
                 // Don't submit GET requests if the form's name does not exist
                 // in the request
-                if (! $request->query->has($name)) {
+                if (! $adapter->hasQueryParam($name)) {
                     return;
                 }
 
-                $data = $request->query->get($name);
+                $data = $adapter->getQueryParam($name);
             }
         } else {
             // Mark the form with an error if the uploaded size was too large
@@ -87,14 +98,21 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
                 return;
             }
 
-            $parameterBag = $this->bodyConverter !== null ? $this->bodyConverter->decode($request) : $request->request;
+            $params = $this->bodyConverter !== null
+                ? $this->bodyConverter->decode($request)
+                : $adapter->getRequestParams();
+
             if ($name === '') {
-                $params = $parameterBag->all();
-                $files = $request->files->all();
-            } elseif ($request->request->has($name) || $request->files->has($name)) {
+                $files = $adapter->getAllFiles();
+            } elseif ($adapter->hasRequestParam($name) || $adapter->hasFile($name)) {
                 $default = $form->getConfig()->getCompound() ? [] : null;
-                $params = $parameterBag->get($name, $default);
-                $files = $request->files->get($name, $default);
+                $params = $params[$name] ?? $default;
+
+                try {
+                    $files = $adapter->getFile($name);
+                } catch (NonExistentFileException $e) {
+                    $files = $default;
+                }
             } else {
                 // Don't submit the form if it is not present in the request
                 return;
@@ -115,7 +133,7 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
      */
     public function isFileUpload($data): bool
     {
-        return $data instanceof File;
+        return $this->adapterFactory->isFileUpload($data);
     }
 
     /**
@@ -125,10 +143,6 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
      */
     public function getUploadFileError($data): ?int
     {
-        if (! $data instanceof UploadedFile || $data->isValid()) {
-            return null;
-        }
-
-        return $data->getError();
+        return $this->adapterFactory->getUploadFileError($data);
     }
 }
