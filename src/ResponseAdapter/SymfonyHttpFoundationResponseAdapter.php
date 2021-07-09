@@ -10,9 +10,9 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
 {
     private Response $response;
 
-    public function __construct()
+    public function __construct(Response $response)
     {
-        $this->response = new Response();
+        $this->response = $response;
     }
 
     public function unwrap(): object

@@ -10,6 +10,7 @@ use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
 use Solido\Common\ResponseAdapter\SymfonyHttpFoundationResponseAdapter;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use function assert;
 use function is_string;
@@ -121,6 +122,6 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
 
     public function createResponse(): ResponseAdapterInterface
     {
-        return new SymfonyHttpFoundationResponseAdapter();
+        return new SymfonyHttpFoundationResponseAdapter(new Response());
     }
 }

@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Solido\Common;
 
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Solido\BodyConverter\Exception\UnsupportedRequestObjectException;
 use Solido\Common\RequestAdapter\PsrServerRequestAdapter;
 use Solido\Common\RequestAdapter\RequestAdapterInterface;
 use Solido\Common\RequestAdapter\SymfonyHttpFoundationRequestAdapter;
+use Solido\Common\ResponseAdapter\PsrResponseAdapter;
+use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
+use Solido\Common\ResponseAdapter\SymfonyHttpFoundationResponseAdapter;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use function get_class;
 use function Safe\sprintf;
@@ -26,7 +31,7 @@ class AdapterFactory implements AdapterFactoryInterface
         $this->responseFactory = $responseFactory;
     }
 
-    public function factory(object $request): RequestAdapterInterface
+    public function createRequestAdapter(object $request): RequestAdapterInterface
     {
         if ($request instanceof Request) {
             return new SymfonyHttpFoundationRequestAdapter($request);
@@ -38,6 +43,21 @@ class AdapterFactory implements AdapterFactoryInterface
 
         throw new UnsupportedRequestObjectException(
             sprintf('Cannot create an adapter for the request class "%s"', get_class($request))
+        );
+    }
+
+    public function createResponseAdapter(object $response): ResponseAdapterInterface
+    {
+        if ($response instanceof Response) {
+            return new SymfonyHttpFoundationResponseAdapter($response);
+        }
+
+        if ($response instanceof ResponseInterface) {
+            return new PsrResponseAdapter($response);
+        }
+
+        throw new UnsupportedRequestObjectException(
+            sprintf('Cannot create an adapter for the response class "%s"', get_class($response))
         );
     }
 

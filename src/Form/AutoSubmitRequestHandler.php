@@ -59,7 +59,7 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
             throw new InvalidArgumentException(sprintf('Expected argument of type "%s" or "%s", "%s" given', Request::class, ServerRequestInterface::class, get_debug_type($request)));
         }
 
-        $adapter = $this->adapterFactory->factory($request);
+        $adapter = $this->adapterFactory->createRequestAdapter($request);
 
         $name = $form->getName();
         $method = $form->getConfig()->getMethod();

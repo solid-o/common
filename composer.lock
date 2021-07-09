@@ -4412,12 +4412,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/solid-o/body-converter.git",
-                "reference": "9de047b891e305c5b1be37f2270b52a81a61e742"
+                "reference": "9785346ec8c088cd6bc3e766306477a6a66ca09b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/solid-o/body-converter/zipball/9de047b891e305c5b1be37f2270b52a81a61e742",
-                "reference": "9de047b891e305c5b1be37f2270b52a81a61e742",
+                "url": "https://api.github.com/repos/solid-o/body-converter/zipball/9785346ec8c088cd6bc3e766306477a6a66ca09b",
+                "reference": "9785346ec8c088cd6bc3e766306477a6a66ca09b",
                 "shasum": ""
             },
             "require": {
@@ -4465,7 +4465,7 @@
                 "issues": "https://github.com/solid-o/body-converter/issues",
                 "source": "https://github.com/solid-o/body-converter/tree/master"
             },
-            "time": "2021-07-09T13:24:55+00:00"
+            "time": "2021-07-09T13:36:00+00:00"
         },
         {
             "name": "solido/php-coding-standards",
