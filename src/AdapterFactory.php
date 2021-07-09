@@ -8,7 +8,8 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use Solido\BodyConverter\Exception\UnsupportedRequestObjectException;
+use Solido\Common\Exception\UnsupportedRequestObjectException;
+use Solido\Common\Exception\UnsupportedResponseObjectException;
 use Solido\Common\RequestAdapter\PsrServerRequestAdapter;
 use Solido\Common\RequestAdapter\RequestAdapterInterface;
 use Solido\Common\RequestAdapter\SymfonyHttpFoundationRequestAdapter;
@@ -56,7 +57,7 @@ class AdapterFactory implements AdapterFactoryInterface
             return new PsrResponseAdapter($response);
         }
 
-        throw new UnsupportedRequestObjectException(
+        throw new UnsupportedResponseObjectException(
             sprintf('Cannot create an adapter for the response class "%s"', get_class($response))
         );
     }
