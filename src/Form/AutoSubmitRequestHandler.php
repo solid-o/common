@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Solido\Common\Form;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ServerRequestInterface;
 use Solido\BodyConverter\BodyConverter;
 use Solido\BodyConverter\BodyConverterInterface;
@@ -44,7 +43,7 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
         }
 
         $this->serverParams = $serverParams ?? new ServerParams();
-        $this->adapterFactory = $adapterFactory ?? new AdapterFactory(new Psr17Factory());
+        $this->adapterFactory = $adapterFactory ?? new AdapterFactory();
         $this->bodyConverter = $bodyConverter;
     }
 
