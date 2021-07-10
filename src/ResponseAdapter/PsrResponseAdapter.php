@@ -20,6 +20,18 @@ class PsrResponseAdapter implements ResponseAdapterInterface
         return $this->response;
     }
 
+    public function getContentType(): string
+    {
+        $header = $this->response->getHeader('Content-Type');
+
+        return $header[0] ?? 'application/octet-stream';
+    }
+
+    public function getStatusCode(): int
+    {
+        return $this->response->getStatusCode();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -46,5 +58,10 @@ class PsrResponseAdapter implements ResponseAdapterInterface
         }
 
         return $this;
+    }
+
+    public function getContent(): string
+    {
+        return (string) $this->response->getBody();
     }
 }

@@ -12,6 +12,16 @@ interface ResponseAdapterInterface
     public function unwrap(): object;
 
     /**
+     * Gets the content type of the response.
+     */
+    public function getContentType(): string;
+
+    /**
+     * Gets the response status code.
+     */
+    public function getStatusCode(): int;
+
+    /**
      * Gets all the headers from the response object.
      *
      * @return array<string, string|string[]>
@@ -31,4 +41,9 @@ interface ResponseAdapterInterface
      * @param array<string, string|string[]> $headers
      */
     public function setHeaders(array $headers): self;
+
+    /**
+     * Gets the response content as string.
+     */
+    public function getContent(): string;
 }
