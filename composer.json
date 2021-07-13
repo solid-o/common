@@ -33,7 +33,7 @@
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
         "roave/security-advisories": "dev-master",
-        "solido/body-converter": "^0.2@dev",
+        "solido/body-converter": "^0.2",
         "solido/php-coding-standards": "dev-master",
         "symfony/config": "^4.4 || ^5.0",
         "symfony/form": "^4.4 || ^5.0",
@@ -57,7 +57,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.2.x-dev"
         }
     }
 }
