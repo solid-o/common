@@ -7,6 +7,7 @@ namespace Solido\Common\Urn;
 use InvalidArgumentException;
 use Stringable;
 
+use function array_map;
 use function array_shift;
 use function assert;
 use function get_debug_type;
@@ -105,7 +106,7 @@ class Urn implements Stringable
      *
      * @param mixed $idOrUrn
      *
-     * @return string[]
+     * @return array<string|null>
      */
     private static function parseUrn($idOrUrn): array
     {
@@ -116,6 +117,6 @@ class Urn implements Stringable
 
         array_shift($matches);
 
-        return $matches;
+        return array_map(static fn (string $value): ?string => empty($value) ? null : $value, $matches);
     }
 }
