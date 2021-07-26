@@ -7,12 +7,15 @@ namespace Solido\Common\Tests\Urn;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
+use Doctrine\Persistence\Mapping\ClassMetadata as ClassMetadataInterface;
 use Doctrine\Persistence\Mapping\RuntimeReflectionService;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use ReflectionClass;
+use Solido\Common\Exception\InvalidConfigurationException;
 use Solido\Common\Exception\ResourceNotFoundException;
 use Solido\Common\Urn\Urn;
 use Solido\Common\Urn\UrnConverter;
@@ -54,7 +57,7 @@ class UrnConverterTest extends TestCase
 
         $manager->find(TestEntity::class, 'test-42')
             ->shouldBeCalledOnce()
-            ->willReturn($obj = new TestEntity());
+            ->willReturn(new TestEntity());
 
         $manager->getMetadataFactory()->willReturn($factory = $this->prophesize(AbstractClassMetadataFactory::class));
         $factory->getAllMetadata()->willReturn([
@@ -104,7 +107,7 @@ class UrnConverterTest extends TestCase
 
         $manager->find(TestEntity::class, 'test-42')
                 ->shouldBeCalledOnce()
-                ->willReturn($obj = new TestEntity());
+                ->willReturn(new TestEntity());
 
         $manager->getMetadataFactory()->willReturn($factory = $this->prophesize(AbstractClassMetadataFactory::class));
         $factory->getAllMetadata()->willReturn([
@@ -154,11 +157,65 @@ class UrnConverterTest extends TestCase
         $manager->getMetadataFactory()->willReturn($factory = $this->prophesize(AbstractClassMetadataFactory::class));
         $factory->getAllMetadata()->willReturn([
             $metadata = new ClassMetadata(TestEntity::class),
-            $metadata2 = new ClassMetadata(TestNonUrnEntity::class),
+            $metadata2 = new ClassMetadata(TestEntity2::class),
+            $metadata3 = new ClassMetadata(TestNonUrnEntity::class),
         ]);
 
         $metadata->wakeupReflection(new RuntimeReflectionService());
         $metadata2->wakeupReflection(new RuntimeReflectionService());
+        $metadata3->wakeupReflection(new RuntimeReflectionService());
+
+        self::assertEquals([
+            'user' => TestEntity::class,
+            'test_entity2' => TestEntity2::class,
+        ], $this->converter->getUrnClassMap());
+    }
+
+    public function testShouldThrowIfUrnClassIsUsedMoreThanOnce(): void
+    {
+        $this->managerRegistry->getManagers()->willReturn([
+            $manager = $this->prophesize(ObjectManager::class),
+        ]);
+
+        $this->managerRegistry->getManagerForClass(TestEntity::class)->willReturn($manager);
+
+        $manager->getMetadataFactory()->willReturn($factory = $this->prophesize(AbstractClassMetadataFactory::class));
+        $factory->getAllMetadata()->willReturn([
+            $metadata = new ClassMetadata(TestEntity::class),
+            $metadata2 = new ClassMetadata(TestDuplicatedEntity::class),
+        ]);
+
+        $metadata->wakeupReflection(new RuntimeReflectionService());
+        $metadata2->wakeupReflection(new RuntimeReflectionService());
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->converter->getUrnClassMap();
+    }
+
+    public function testShouldSTIChildrenEntitiesAreExcludedFromClassMap(): void
+    {
+        $this->managerRegistry->getManagers()->willReturn([
+            $manager = $this->prophesize(ObjectManager::class),
+        ]);
+
+        $this->managerRegistry->getManagerForClass(TestEntity::class)->willReturn($manager);
+
+        $manager->getMetadataFactory()->willReturn($factory = $this->prophesize(AbstractClassMetadataFactory::class));
+        $factory->getAllMetadata()->willReturn([
+            $metadata3 = new ClassMetadata(TestDuplicatedEntity::class),
+            $metadata = new ClassMetadata(TestNonUrnEntity::class),
+            $metadata2 = new ClassMetadata(TestEntity::class),
+            $invalidMetadata = $this->prophesize(ClassMetadataInterface::class),
+        ]);
+
+        $invalidMetadata->getReflectionClass()->willReturn(new ReflectionClass($this));
+
+        $metadata3->inheritanceType = ClassMetadata::INHERITANCE_TYPE_SINGLE_TABLE;
+        $metadata3->rootEntityName = TestEntity::class;
+
+        $metadata->wakeupReflection(new RuntimeReflectionService());
+        $metadata2->wakeupReflection(new RuntimeReflectionService());
+        $metadata3->wakeupReflection(new RuntimeReflectionService());
 
         self::assertEquals([
             'user' => TestEntity::class,
@@ -167,6 +224,25 @@ class UrnConverterTest extends TestCase
 }
 
 class TestEntity implements UrnGeneratorInterface
+{
+    public static function getUrnClass(): string
+    {
+        return 'user';
+    }
+
+    public function getUrn(): Urn
+    {
+    }
+}
+
+class TestEntity2 implements UrnGeneratorInterface
+{
+    public function getUrn(): Urn
+    {
+    }
+}
+
+class TestDuplicatedEntity implements UrnGeneratorInterface
 {
     public static function getUrnClass(): string
     {

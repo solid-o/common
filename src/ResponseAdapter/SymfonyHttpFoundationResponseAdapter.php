@@ -8,7 +8,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+use function assert;
+use function is_string;
 use function ob_get_clean;
+use function ob_get_level;
 use function ob_start;
 
 class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
@@ -28,7 +31,10 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
 
     public function getContentType(): string
     {
-        return (string) $this->response->headers->get('Content-Type', 'application/octet-stream');
+        $header = $this->response->headers->get('Content-Type', 'application/octet-stream');
+        assert(is_string($header));
+
+        return $header;
     }
 
     public function getStatusCode(): int
@@ -70,14 +76,21 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
     {
         if ($this->response instanceof StreamedResponse || $this->response instanceof BinaryFileResponse) {
             if (! isset($this->content)) {
+                assert($obLevel = ob_get_level() >= 0);
                 ob_start();
+
                 $this->response->sendContent();
-                $this->content = (string) ob_get_clean();
+
+                assert($obLevel + 1 === ob_get_level());
+                $content = ob_get_clean();
+
+                assert(is_string($content));
+                $this->content = $content;
             }
 
             return $this->content;
         }
 
-        return (string) $this->response->getContent();
+        return $this->response->getContent() ?: '';
     }
 }

@@ -6,6 +6,10 @@ namespace Solido\Common\ResponseAdapter;
 
 use Psr\Http\Message\ResponseInterface;
 
+use function array_keys;
+use function array_map;
+use function Safe\array_combine;
+
 class PsrResponseAdapter implements ResponseAdapterInterface
 {
     private ResponseInterface $response;
@@ -37,7 +41,12 @@ class PsrResponseAdapter implements ResponseAdapterInterface
      */
     public function getHeaders(): array
     {
-        return $this->response->getHeaders();
+        $headers = $this->response->getHeaders();
+
+        return array_combine(
+            array_map('strtolower', array_keys($headers)),
+            $headers
+        );
     }
 
     /**

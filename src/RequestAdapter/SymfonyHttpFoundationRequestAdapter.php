@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Solido\Common\RequestAdapter;
 
+use Solido\Common\Exception\InvalidArgumentException;
 use Solido\Common\Exception\NonExistentFileException;
 use Solido\Common\Exception\NonExistentParameterException;
 use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
 use Solido\Common\ResponseAdapter\SymfonyHttpFoundationResponseAdapter;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 use function assert;
+use function get_debug_type;
 use function is_string;
+use function Safe\sprintf;
 
 class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
 {
@@ -121,6 +125,10 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
      */
     public static function getUploadFileError($data): ?int
     {
+        if (! $data instanceof File) {
+            throw new InvalidArgumentException(sprintf('Invalid uploaded file object. Expected Symfony\Component\HttpFoundation\File\UploadedFile, %s given', get_debug_type($data)));
+        }
+
         if (! $data instanceof UploadedFile || $data->isValid()) {
             return null;
         }

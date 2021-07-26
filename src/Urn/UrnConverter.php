@@ -16,9 +16,9 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 
 use function assert;
 use function in_array;
-use function mb_strtolower;
 use function Safe\preg_replace;
 use function Safe\sprintf;
+use function strtolower;
 use function var_export;
 
 class UrnConverter implements UrnConverterInterface
@@ -142,7 +142,7 @@ class UrnConverter implements UrnConverterInterface
                     $method = $reflectionClass->getMethod('getUrnClass');
                     $class = $method->invoke(null);
                 } else {
-                    $class = mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $reflectionClass->getShortName()));
+                    $class = strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $reflectionClass->getShortName()));
                 }
 
                 if (isset($map[$class])) {

@@ -6,7 +6,6 @@ namespace Solido\Common\Tests\Form;
 
 use Solido\Common\Form\AutoSubmitRequestHandler;
 use Symfony\Component\Form\RequestHandlerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class PsrAutoSubmitRequestHandlerTest extends PsrServerRequestHandlerTest
 {
