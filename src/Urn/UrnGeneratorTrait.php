@@ -7,8 +7,8 @@ namespace Solido\Common\Urn;
 use ProxyManager\Proxy\ProxyInterface;
 use ReflectionClass;
 
-use function mb_strtolower;
 use function preg_replace;
+use function strtolower;
 
 trait UrnGeneratorTrait
 {
@@ -47,7 +47,7 @@ trait UrnGeneratorTrait
             $reflectionClass = $reflectionClass->getParentClass();
         }
 
-        return mb_strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $reflectionClass->getShortName()));
+        return strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $reflectionClass->getShortName()));
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Solido\Common\Urn;
 
-use InvalidArgumentException;
+use Solido\Common\Exception\InvalidArgumentException;
 use Stringable;
 
 use function array_map;
@@ -45,7 +45,7 @@ class Urn implements Stringable
 
         if ($owner !== null) {
             if ($owner instanceof UrnGeneratorInterface) {
-                $owner = (string) $owner->getUrn()->id;
+                $owner = $owner->getUrn()->id;
             }
 
             if (! is_string($owner)) {
@@ -55,6 +55,10 @@ class Urn implements Stringable
 
         if (self::isUrn($idOrUrn)) {
             [$domain, $partition, $tenant, $owner, $class, $idOrUrn] = self::parseUrn($idOrUrn);
+        }
+
+        if (empty($class)) {
+            throw new InvalidArgumentException('URN class must be defined');
         }
 
         $this->id = $idOrUrn;

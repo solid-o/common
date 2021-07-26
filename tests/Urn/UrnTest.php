@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Solido\Common\Tests\Urn;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Solido\Common\Exception\InvalidArgumentException;
 use Solido\Common\Urn\Urn;
 use Solido\Common\Urn\UrnGeneratorInterface;
 use stdClass;
@@ -47,14 +47,22 @@ class UrnTest extends TestCase
         self::assertEquals('class-name', $urn->class);
         self::assertEquals('custom_domain', $urn->domain);
         self::assertEquals('123', $urn->partition);
+        self::assertNull($urn->tenant);
+        self::assertNull($urn->owner);
 
         $urn = new Urn('my-id', 'class');
         self::assertEquals('my-id', $urn->id);
         self::assertEquals('test-domain', $urn->domain);
+        self::assertNull($urn->partition);
+        self::assertNull($urn->tenant);
+        self::assertNull($urn->owner);
 
         $urn = new Urn($urn);
         self::assertEquals('my-id', $urn->id);
         self::assertEquals('test-domain', $urn->domain);
+        self::assertNull($urn->partition);
+        self::assertNull($urn->tenant);
+        self::assertNull($urn->owner);
 
         $urn = new Urn('my-id', 'class-name', new class implements UrnGeneratorInterface {
             public function getUrn(): Urn
@@ -65,11 +73,28 @@ class UrnTest extends TestCase
         self::assertEquals('my-id', $urn->id);
         self::assertEquals('class-name', $urn->class);
         self::assertEquals('owner-id', $urn->owner);
+        self::assertNull($urn->partition);
+        self::assertNull($urn->tenant);
     }
 
     public function testShouldThrowIfOwnerIsObject(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        new Urn('my-id', 'class-name', new \stdClass());
+        new Urn('my-id', 'class-name', new stdClass());
+    }
+
+    /**
+     * @dataProvider provideNoUrn
+     */
+    public function testShouldThrowIfClassIsNotSet(string $value): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new Urn($value);
+    }
+
+    public function provideNoUrn(): iterable
+    {
+        yield ['not-an-urn:domain::::class-name:my-id'];
+        yield ['my-id'];
     }
 }

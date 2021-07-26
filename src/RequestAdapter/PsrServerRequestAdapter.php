@@ -14,9 +14,13 @@ use Solido\Common\ResponseAdapter\PsrResponseAdapter;
 use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
 
 use function array_key_exists;
-use function get_object_vars;
+use function get_debug_type;
 use function is_object;
+use function json_decode;
+use function json_encode;
+use function Safe\sprintf;
 
+use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 class PsrServerRequestAdapter implements RequestAdapterInterface
@@ -61,7 +65,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
         }
 
         if (is_object($parsedBody)) {
-            return get_object_vars($parsedBody);
+            $parsedBody = json_decode(json_encode($parsedBody, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
         }
 
         return $parsedBody;
@@ -140,7 +144,11 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
      */
     public static function getUploadFileError($data): ?int
     {
-        if (! $data instanceof UploadedFileInterface || $data->getError() === UPLOAD_ERR_OK) {
+        if (! $data instanceof UploadedFileInterface) {
+            throw new InvalidArgumentException(sprintf('Invalid uploaded file object. Expected Psr\Http\Message\UploadedFileInterface, %s given', get_debug_type($data)));
+        }
+
+        if ($data->getError() === UPLOAD_ERR_OK) {
             return null;
         }
 

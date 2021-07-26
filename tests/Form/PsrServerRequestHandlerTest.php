@@ -12,6 +12,8 @@ use Symfony\Component\Form\RequestHandlerInterface;
 
 use function Safe\filesize;
 
+use const UPLOAD_ERR_OK;
+
 abstract class PsrServerRequestHandlerTest extends AbstractRequestHandlerTest
 {
     public function testRequestShouldBeInstanceOfRequest(): void

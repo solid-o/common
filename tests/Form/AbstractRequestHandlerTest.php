@@ -8,6 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\Core\DataMapper\PropertyPathMapper;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
@@ -17,7 +18,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\RequestHandlerInterface;
 use Symfony\Component\Form\Util\ServerParams;
-use Symfony\Component\HttpFoundation\Request;
 
 use function iterator_to_array;
 
@@ -208,6 +208,27 @@ abstract class AbstractRequestHandlerTest extends TestCase
     /**
      * @dataProvider methodExceptGetProvider
      */
+    public function testNoMergeParamsAndFiles(string $method): void
+    {
+        $form = $this->createForm('param1', $method, true);
+        $form->add($this->createForm('field1'));
+        $form->add($this->createBuilder('field2', false, ['allow_file_upload' => true])->getForm());
+        $file = $this->getUploadedFile();
+
+        $this->setRequestData($method, ['param1' => 'DATA'], [
+            'param1' => ['field2' => $file],
+        ]);
+
+        $this->requestHandler->handleRequest($form, $this->request);
+
+        self::assertTrue($form->isSubmitted());
+        self::assertNull($form->get('field1')->getData());
+        self::assertNull($form->get('field2')->getData());
+    }
+
+    /**
+     * @dataProvider methodExceptGetProvider
+     */
     public function testParamTakesPrecedenceOverFile(string $method): void
     {
         $form = $this->createForm('param1', $method);
@@ -290,7 +311,8 @@ abstract class AbstractRequestHandlerTest extends TestCase
                            ->willReturn($iniMax);
 
         $options = ['post_max_size_message' => 'Max {{ max }}!'];
-        $form = $this->factory->createNamed('name', TextType::class, null, $options);
+        $form = $this->factory->createNamed('form', FormType::class, ['name' => 'DATA_NAME'], $options);
+        $form->add('name', TextType::class);
         $this->setRequestData('POST', [], []);
 
         $this->requestHandler->handleRequest($form, $this->request);
@@ -301,6 +323,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
 
             self::assertEquals([$error], iterator_to_array($form->getErrors()));
             self::assertTrue($form->isSubmitted());
+            self::assertEquals(['name' => 'DATA_NAME'], $form->getData());
         } else {
             self::assertCount(0, $form->getErrors());
             self::assertFalse($form->isSubmitted());
@@ -352,15 +375,15 @@ abstract class AbstractRequestHandlerTest extends TestCase
         yield 'stopped by extension' => [UPLOAD_ERR_EXTENSION, UPLOAD_ERR_EXTENSION];
     }
 
-    abstract protected function setRequestData($method, $data, $files = []);
+    abstract protected function setRequestData($method, $data, $files = []): void;
 
-    abstract protected function getRequestHandler();
+    abstract protected function getRequestHandler(): RequestHandlerInterface;
 
-    abstract protected function getUploadedFile($suffix = '');
+    abstract protected function getUploadedFile($suffix = ''): object;
 
-    abstract protected function getInvalidFile();
+    abstract protected function getInvalidFile(): string;
 
-    abstract protected function getFailedUploadedFile($errorCode);
+    abstract protected function getFailedUploadedFile($errorCode): object;
 
     protected function createForm($name, $method = null, $compound = false): Form
     {
