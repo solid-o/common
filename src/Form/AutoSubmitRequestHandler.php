@@ -17,7 +17,6 @@ use Symfony\Component\Form\RequestHandlerInterface;
 use Symfony\Component\Form\Util\ServerParams;
 use Symfony\Component\HttpFoundation\Request;
 
-use function call_user_func;
 use function class_exists;
 use function get_debug_type;
 use function is_array;
@@ -48,7 +47,7 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $request
      */
     public function handleRequest(FormInterface $form, $request = null): void
     {
@@ -89,8 +88,10 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
                 // Submit the form, but don't clear the default values
                 $form->submit(null, false);
 
+                /** @phpstan-var callable(): string $uploadMaxSizeMessageCallable */
+                $uploadMaxSizeMessageCallable = $form->getConfig()->getOption('upload_max_size_message');
                 $form->addError(new FormError(
-                    call_user_func($form->getConfig()->getOption('upload_max_size_message')),
+                    $uploadMaxSizeMessageCallable(),
                     null,
                     ['{{ max }}' => $this->serverParams->getNormalizedIniPostMaxSize()]
                 ));
@@ -125,11 +126,12 @@ final class AutoSubmitRequestHandler implements RequestHandlerInterface
             }
         }
 
+        /* @phpstan-ignore-next-line */
         $form->submit($data, $method !== Request::METHOD_PATCH);
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $data
      */
     public function isFileUpload($data): bool
     {

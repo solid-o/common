@@ -122,6 +122,26 @@ class UrnConverterTest extends TestCase
         $this->converter->getItemFromUrn(new Urn('test-42', 'user', null, null, null, 'example-application'), self::class);
     }
 
+    public function testGetItemFromUrnShouldNotThrowIfAcceptableClassIsFound(): void
+    {
+        $this->managerRegistry->getManagers()->willReturn([
+            $manager = $this->prophesize(ObjectManager::class),
+        ]);
+        $this->managerRegistry->getManagerForClass(TestEntity::class)->willReturn($manager);
+
+        $manager->find(TestEntity::class, 'test-42')
+                ->shouldBeCalledOnce()
+                ->willReturn(new TestEntity());
+
+        $manager->getMetadataFactory()->willReturn($factory = $this->prophesize(AbstractClassMetadataFactory::class));
+        $factory->getAllMetadata()->willReturn([
+            $metadata = new ClassMetadata(TestEntity::class),
+        ]);
+
+        $metadata->wakeupReflection(new RuntimeReflectionService());
+        $this->converter->getItemFromUrn(new Urn('test-42', 'user', null, null, null, 'example-application'), TestEntity::class);
+    }
+
     public function testGetItemFromUrnShouldThrowIfManagerFindReturnsNull(): void
     {
         $this->managerRegistry->getManagers()->willReturn([

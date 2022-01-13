@@ -47,6 +47,7 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
      */
     public function getHeaders(): array
     {
+        /* @phpstan-ignore-next-line */
         return $this->response->headers->all();
     }
 
@@ -59,6 +60,7 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
             return [];
         }
 
+        /* @phpstan-ignore-next-line */
         return $this->response->headers->all($name);
     }
 

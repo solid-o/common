@@ -41,6 +41,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
      */
     public function getHeader(string $name): array
     {
+        /* @phpstan-ignore-next-line */
         return $this->request->headers->all($name);
     }
 
@@ -109,7 +110,10 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
             throw new NonExistentFileException($name);
         }
 
-        return $this->request->files->get($name);
+        /** @var File[] | File $value */
+        $value = $this->request->files->get($name);
+
+        return $value;
     }
 
     public function getRequestContent(): string

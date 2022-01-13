@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Solido\Common\Tests\Form;
 
 use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Stream;
 use Nyholm\Psr7\UploadedFile;
 use Solido\Common\Exception\InvalidArgumentException;
 use stdClass;
@@ -28,7 +29,9 @@ abstract class PsrServerRequestHandlerTest extends AbstractRequestHandlerTest
         if ($method === 'GET') {
             $request = $request->withQueryParams($data);
         } else {
-            $request = $request->withParsedBody($data);
+            $request = $request
+                ->withBody(Stream::create(http_build_query($data)))
+                ->withParsedBody($data);
         }
 
         $this->request = $request->withUploadedFiles($files);

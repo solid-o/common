@@ -20,7 +20,7 @@ abstract class HttpFoundationRequestHandlerTest extends AbstractRequestHandlerTe
 
     protected function setRequestData($method, $data, $files = []): void
     {
-        $this->request = Request::create('http://localhost', $method, $data, [], $files);
+        $this->request = Request::create('http://localhost', $method, $data, [], $files, [], http_build_query($data));
     }
 
     abstract protected function getRequestHandler(): RequestHandlerInterface;

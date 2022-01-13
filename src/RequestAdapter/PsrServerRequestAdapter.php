@@ -14,7 +14,9 @@ use Solido\Common\ResponseAdapter\PsrResponseAdapter;
 use Solido\Common\ResponseAdapter\ResponseAdapterInterface;
 
 use function array_key_exists;
+use function assert;
 use function get_debug_type;
+use function is_array;
 use function is_object;
 use function json_decode;
 use function json_encode;
@@ -66,6 +68,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
 
         if (is_object($parsedBody)) {
             $parsedBody = json_decode(json_encode($parsedBody, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+            assert(is_array($parsedBody));
         }
 
         return $parsedBody;

@@ -7,6 +7,7 @@ namespace Solido\Common\Tests\Form;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Form\Extension\Core\DataMapper\DataMapper;
 use Symfony\Component\Form\Extension\Core\DataMapper\PropertyPathMapper;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -402,7 +403,7 @@ abstract class AbstractRequestHandlerTest extends TestCase
         $builder->setCompound($compound);
 
         if ($compound) {
-            $builder->setDataMapper(new PropertyPathMapper());
+            $builder->setDataMapper(class_exists(PropertyPathMapper::class) ? new PropertyPathMapper() : new DataMapper());
         }
 
         return $builder;

@@ -27,7 +27,7 @@ class Urn implements Stringable
     public ?string $class;
 
     /**
-     * @param mixed $idOrUrn
+     * @param scalar|Stringable|Urn $idOrUrn
      * @param string|Stringable|UrnGeneratorInterface $owner
      */
     public function __construct($idOrUrn, ?string $class = null, $owner = null, ?string $tenant = null, ?string $partition = null, ?string $domain = null)
@@ -61,7 +61,7 @@ class Urn implements Stringable
             throw new InvalidArgumentException('URN class must be defined');
         }
 
-        $this->id = $idOrUrn;
+        $this->id = (string) $idOrUrn;
         $this->class = $class;
         $this->owner = $owner;
         $this->tenant = $tenant;
@@ -90,7 +90,7 @@ class Urn implements Stringable
     /**
      * Whether the given argument is an Urn or not.
      *
-     * @param mixed $idOrUrn
+     * @param scalar|Stringable|Urn $idOrUrn
      */
     public static function isUrn($idOrUrn): bool
     {
@@ -102,13 +102,13 @@ class Urn implements Stringable
             return false;
         }
 
-        return (bool) preg_match('/^urn:.*:.*:.*:.*:.*:.*$/', $idOrUrn);
+        return (bool) preg_match('/^urn:.*:.*:.*:.*:.*:\S*$/', $idOrUrn);
     }
 
     /**
      * Parse an urn.
      *
-     * @param mixed $idOrUrn
+     * @param scalar|Stringable|Urn $idOrUrn
      *
      * @return array<string|null>
      */
@@ -116,7 +116,7 @@ class Urn implements Stringable
     {
         $idOrUrn = (string) $idOrUrn;
 
-        $result = preg_match('/^urn:(.*):(.*):(.*):(.*):(.*):(.*)$/', $idOrUrn, $matches);
+        $result = preg_match('/^urn:(.*):(.*):(.*):(.*):(.*):(\S*)$/', $idOrUrn, $matches);
         assert($result === 1);
 
         array_shift($matches);

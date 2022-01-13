@@ -57,6 +57,18 @@ class UrnTest extends TestCase
         self::assertNull($urn->tenant);
         self::assertNull($urn->owner);
 
+        $urn = new Urn(new class {
+            public function __toString()
+            {
+                return 'my-id';
+            }
+        }, 'class');
+        self::assertEquals('my-id', $urn->id);
+        self::assertEquals('test-domain', $urn->domain);
+        self::assertNull($urn->partition);
+        self::assertNull($urn->tenant);
+        self::assertNull($urn->owner);
+
         $urn = new Urn($urn);
         self::assertEquals('my-id', $urn->id);
         self::assertEquals('test-domain', $urn->domain);
@@ -75,6 +87,14 @@ class UrnTest extends TestCase
         self::assertEquals('owner-id', $urn->owner);
         self::assertNull($urn->partition);
         self::assertNull($urn->tenant);
+
+        $urn = new Urn(new Urn('urn:custom_domain:123:::class-name:my-id'), 'other-class');
+        self::assertEquals('my-id', $urn->id);
+        self::assertEquals('class-name', $urn->class);
+        self::assertEquals('custom_domain', $urn->domain);
+        self::assertEquals('123', $urn->partition);
+        self::assertNull($urn->tenant);
+        self::assertNull($urn->owner);
     }
 
     public function testShouldThrowIfOwnerIsObject(): void
@@ -95,6 +115,7 @@ class UrnTest extends TestCase
     public function provideNoUrn(): iterable
     {
         yield ['not-an-urn:domain::::class-name:my-id'];
+        yield ['urn:custom_domain:123:::class-name:my-id after space'];
         yield ['my-id'];
     }
 }
