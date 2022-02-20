@@ -30,6 +30,8 @@ jobs:
             - run: composer install
             - run: vendor/bin/phpunit --coverage-clover phpunit/phpunit.coverage.xml --coverage-xml phpunit/coverage-xml --log-junit phpunit/junit.xml
             - run: infection --threads=4 --logger-github --coverage=phpunit
+              env:
+                STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
 
             - name: Set repository name
               id: repository-name

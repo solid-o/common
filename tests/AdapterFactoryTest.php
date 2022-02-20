@@ -18,6 +18,7 @@ use Solido\Common\RequestAdapter\SymfonyHttpFoundationRequestAdapter;
 use Solido\Common\ResponseAdapter\PsrResponseAdapter;
 use Solido\Common\ResponseAdapter\SymfonyHttpFoundationResponseAdapter;
 use stdClass;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request as SfRequest;
 use Symfony\Component\HttpFoundation\Response as SfResponse;
@@ -112,5 +113,38 @@ class AdapterFactoryTest extends TestCase
     {
         $factory = new AdapterFactory();
         self::assertNull($factory->getUploadFileError(new stdClass()));
+    }
+
+    public function testUploadFileErrorShouldReturnCorrectFileUploadErrorCode(): void
+    {
+        $factory = new AdapterFactory();
+
+        $file = new UploadedFile(__FILE__, 'xyz', 'text/plain', UPLOAD_ERR_INI_SIZE, true);
+        self::assertEquals(UPLOAD_ERR_INI_SIZE, $factory->getUploadFileError($file));
+
+        $file = new UploadedFile(__FILE__, 'xyz', 'text/plain', UPLOAD_ERR_OK, true);
+        self::assertNull($factory->getUploadFileError($file));
+
+        $file = new File(__FILE__, true);
+        self::assertNull($factory->getUploadFileError($file));
+    }
+
+    /**
+     * @dataProvider provideFileUpload
+     */
+    public function testIsFileUpload(bool $expected, $value): void
+    {
+        $factory = new AdapterFactory();
+        self::assertEquals($expected, $factory->isFileUpload($value));
+    }
+
+    public function provideFileUpload(): iterable
+    {
+        yield [true, new File(__FILE__)];
+        yield [true, new UploadedFile(__FILE__, 'xyz', 'text/plain', UPLOAD_ERR_OK, true)];
+        yield [true, new PsrUploadedFile(__FILE__, filesize(__FILE__), UPLOAD_ERR_OK)];
+        yield [false, new stdClass()];
+        yield [false, []];
+        yield [false, 'foobar'];
     }
 }

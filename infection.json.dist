@@ -5,6 +5,10 @@
         ]
     },
     "logs": {
+        "stryker": {
+            "badge": "master"
+        },
+        "html": "infection\/infection.html",
         "text": "infection\/infection.log"
     },
     "mutators": {
