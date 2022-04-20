@@ -98,6 +98,22 @@ class SymfonyHttpFoundationRequestAdapterTest extends TestCase
         self::assertEquals('application/json', $adapter->getContentType());
     }
 
+    public function testGetRequestLength(): void
+    {
+        $request = new Request([], [], [], [], [], ['CONTENT_LENGTH' => '15'], '{}');
+        $adapter = new SymfonyHttpFoundationRequestAdapter($request);
+
+        self::assertSame(15, $adapter->getRequestContentLength());
+    }
+
+    public function testGetRequestLengthIfMissing(): void
+    {
+        $request = new Request([], [], [], [], [], [], '{}');
+        $adapter = new SymfonyHttpFoundationRequestAdapter($request);
+
+        self::assertSame(0, $adapter->getRequestContentLength());
+    }
+
     public function testGetRequestBody(): void
     {
         $request = new Request([], [], [], [], [], ['CONTENT_TYPE' => 'application/json'], '{}');

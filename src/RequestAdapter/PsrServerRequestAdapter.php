@@ -142,6 +142,11 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
         return (string) $this->request->getBody();
     }
 
+    public function getRequestContentLength(): int
+    {
+        return (int) ($this->request->getServerParams()['CONTENT_LENGTH'] ?? 0);
+    }
+
     /**
      * {@inheritdoc}
      */

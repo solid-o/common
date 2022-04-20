@@ -105,6 +105,22 @@ class PsrServerRequestAdapterTest extends TestCase
         self::assertEquals('application/json', $adapter->getContentType());
     }
 
+    public function testGetRequestLength(): void
+    {
+        $request = new ServerRequest('GET', '/', [], null, '1.1', ['CONTENT_LENGTH' => '15']);
+        $adapter = new PsrServerRequestAdapter($request, null);
+
+        self::assertSame(15, $adapter->getRequestContentLength());
+    }
+
+    public function testGetRequestLengthIfMissing(): void
+    {
+        $request = new ServerRequest('GET', '/', []);
+        $adapter = new PsrServerRequestAdapter($request, null);
+
+        self::assertSame(0, $adapter->getRequestContentLength());
+    }
+
     public function testGetRequestBody(): void
     {
         $request = (new ServerRequest('GET', '/', ['Content-Type' => 'application/json']))

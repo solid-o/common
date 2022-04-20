@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use function assert;
 use function get_debug_type;
+use function is_numeric;
 use function is_string;
 use function Safe\sprintf;
 
@@ -122,6 +123,14 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
         assert(is_string($content));
 
         return $content;
+    }
+
+    public function getRequestContentLength(): int
+    {
+        $length = $this->request->server->get('CONTENT_LENGTH', 0);
+        assert(is_numeric($length));
+
+        return (int) $length;
     }
 
     /**

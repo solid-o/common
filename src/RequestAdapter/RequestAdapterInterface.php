@@ -83,6 +83,11 @@ interface RequestAdapterInterface
     public function getRequestContent(): string;
 
     /**
+     * Gets the request content bytes count (length).
+     */
+    public function getRequestContentLength(): int;
+
+    /**
      * Gets the upload file error from data.
      *
      * @param mixed $data
