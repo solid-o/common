@@ -7,11 +7,11 @@ namespace Solido\Common\Exception;
 use RuntimeException;
 use Throwable;
 
-use function Safe\sprintf;
+use function sprintf;
 
 class NonExistentFileException extends RuntimeException
 {
-    public function __construct(string $fileName, ?Throwable $previous = null)
+    public function __construct(string $fileName, Throwable|null $previous = null)
     {
         parent::__construct(sprintf('You have requested non-existent file "%s"', $fileName), 0, $previous);
     }

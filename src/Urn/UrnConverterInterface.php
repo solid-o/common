@@ -16,5 +16,5 @@ interface UrnConverterInterface
      *
      * @template T of object
      */
-    public function getItemFromUrn(Urn $value, ?string $acceptable = null): object;
+    public function getItemFromUrn(Urn $value, string|null $acceptable = null): object;
 }

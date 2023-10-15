@@ -18,15 +18,12 @@ use function assert;
 use function get_debug_type;
 use function is_numeric;
 use function is_string;
-use function Safe\sprintf;
+use function sprintf;
 
 class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
 {
-    private Request $request;
-
-    public function __construct(Request $request)
+    public function __construct(private Request $request)
     {
-        $this->request = $request;
     }
 
     public function getContentType(): string
@@ -77,10 +74,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
         return $this->request->query->has($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getQueryParam(string $name)
+    public function getQueryParam(string $name): mixed
     {
         if (! $this->request->query->has($name)) {
             throw new NonExistentParameterException($name);
@@ -102,10 +96,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
         return $this->request->files->has($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFile(string $name)
+    public function getFile(string $name): object|array
     {
         if (! $this->hasFile($name)) {
             throw new NonExistentFileException($name);
@@ -133,10 +124,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
         return (int) $length;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getUploadFileError($data): ?int
+    public static function getUploadFileError(mixed $data): int|null
     {
         if (! $data instanceof File) {
             throw new InvalidArgumentException(sprintf('Invalid uploaded file object. Expected Symfony\Component\HttpFoundation\File\UploadedFile, %s given', get_debug_type($data)));

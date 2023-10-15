@@ -13,7 +13,7 @@ use function assert;
 use function get_debug_type;
 use function is_string;
 use function Safe\preg_match;
-use function Safe\sprintf;
+use function sprintf;
 
 class Urn implements Stringable
 {
@@ -21,17 +21,19 @@ class Urn implements Stringable
 
     public string $id;
     public string $domain;
-    public ?string $partition;
-    public ?string $tenant;
-    public ?string $owner;
-    public ?string $class;
+    public string|null $partition; // phpcs:ignore SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion.RequiredConstructorPropertyPromotion
+    public string|null $tenant; // phpcs:ignore SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion.RequiredConstructorPropertyPromotion
+    public string|null $owner;
+    public string|null $class; // phpcs:ignore SlevomatCodingStandard.Classes.RequireConstructorPropertyPromotion.RequiredConstructorPropertyPromotion
 
-    /**
-     * @param scalar|Stringable|Urn $idOrUrn
-     * @param string|Stringable|UrnGeneratorInterface $owner
-     */
-    public function __construct($idOrUrn, ?string $class = null, $owner = null, ?string $tenant = null, ?string $partition = null, ?string $domain = null)
-    {
+    public function __construct(
+        mixed $idOrUrn,
+        string|null $class = null,
+        string|Stringable|UrnGeneratorInterface|null $owner = null,
+        string|null $tenant = null,
+        string|null $partition = null,
+        string|null $domain = null,
+    ) {
         if ($idOrUrn instanceof self) {
             $this->id = $idOrUrn->id;
             $this->class = $idOrUrn->class;
@@ -61,7 +63,7 @@ class Urn implements Stringable
             throw new InvalidArgumentException('URN class must be defined');
         }
 
-        $this->id = (string) $idOrUrn;
+        $this->id = (string) $idOrUrn; // @phpstan-ignore-line
         $this->class = $class;
         $this->owner = $owner;
         $this->tenant = $tenant;
@@ -78,7 +80,7 @@ class Urn implements Stringable
             $this->tenant,
             $this->owner,
             $this->class,
-            $this->id
+            $this->id,
         );
     }
 
@@ -89,10 +91,8 @@ class Urn implements Stringable
 
     /**
      * Whether the given argument is an Urn or not.
-     *
-     * @param scalar|Stringable|Urn $idOrUrn
      */
-    public static function isUrn($idOrUrn): bool
+    public static function isUrn(mixed $idOrUrn): bool
     {
         if ($idOrUrn instanceof self) {
             return true;
@@ -108,19 +108,17 @@ class Urn implements Stringable
     /**
      * Parse an urn.
      *
-     * @param scalar|Stringable|Urn $idOrUrn
-     *
      * @return array<string|null>
      */
-    private static function parseUrn($idOrUrn): array
+    private static function parseUrn(mixed $idOrUrn): array
     {
-        $idOrUrn = (string) $idOrUrn;
+        $idOrUrn = (string) $idOrUrn; // @phpstan-ignore-line
 
         $result = preg_match('/^urn:(.*):(.*):(.*):(.*):(.*):(\S*)$/', $idOrUrn, $matches);
         assert($result === 1);
 
         array_shift($matches);
 
-        return array_map(static fn (string $value): ?string => empty($value) ? null : $value, $matches);
+        return array_map(static fn (string $value): string|null => empty($value) ? null : $value, $matches);
     }
 }

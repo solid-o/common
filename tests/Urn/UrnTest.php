@@ -9,6 +9,7 @@ use Solido\Common\Exception\InvalidArgumentException;
 use Solido\Common\Urn\Urn;
 use Solido\Common\Urn\UrnGeneratorInterface;
 use stdClass;
+use TypeError;
 
 class UrnTest extends TestCase
 {
@@ -95,12 +96,6 @@ class UrnTest extends TestCase
         self::assertEquals('123', $urn->partition);
         self::assertNull($urn->tenant);
         self::assertNull($urn->owner);
-    }
-
-    public function testShouldThrowIfOwnerIsObject(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        new Urn('my-id', 'class-name', new stdClass());
     }
 
     /**

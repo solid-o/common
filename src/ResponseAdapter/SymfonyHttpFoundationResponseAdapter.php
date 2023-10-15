@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use function assert;
+use function function_exists;
 use function is_string;
 use function ob_get_clean;
 use function ob_get_level;
@@ -16,12 +17,10 @@ use function ob_start;
 
 class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
 {
-    private Response $response;
     private string $content;
 
-    public function __construct(Response $response)
+    public function __construct(private Response $response)
     {
-        $this->response = $response;
     }
 
     public function unwrap(): object
@@ -79,7 +78,11 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
         if ($this->response instanceof StreamedResponse || $this->response instanceof BinaryFileResponse) {
             if (! isset($this->content)) {
                 assert($obLevel = ob_get_level() >= 0);
-                ob_start();
+                if (function_exists('Safe\ob_start')) {
+                    \Safe\ob_start();
+                } else {
+                    ob_start(); // @phpstan-ignore-line
+                }
 
                 $this->response->sendContent();
 

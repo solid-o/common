@@ -62,7 +62,7 @@ class PsrServerRequestAdapterTest extends TestCase
 
         $this->expectException(NonExistentParameterException::class);
         $this->expectExceptionCode(0);
-        $this->expectErrorMessage('You have requested non-existent parameter "test"');
+        $this->expectExceptionMessage('You have requested non-existent parameter "test"');
 
         $adapter->getQueryParam('test');
     }
@@ -82,7 +82,7 @@ class PsrServerRequestAdapterTest extends TestCase
 
         $this->expectException(NonExistentFileException::class);
         $this->expectExceptionCode(0);
-        $this->expectErrorMessage('You have requested non-existent file "test"');
+        $this->expectExceptionMessage('You have requested non-existent file "test"');
 
         $adapter->getFile('test');
     }

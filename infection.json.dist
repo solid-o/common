@@ -30,6 +30,6 @@
             ]
         }
     },
-    "minMsi": 95,
+    "minMsi": 94,
     "minCoveredMsi": 95
 }

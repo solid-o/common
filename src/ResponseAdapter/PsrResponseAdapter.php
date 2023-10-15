@@ -12,11 +12,8 @@ use function Safe\array_combine;
 
 class PsrResponseAdapter implements ResponseAdapterInterface
 {
-    private ResponseInterface $response;
-
-    public function __construct(ResponseInterface $response)
+    public function __construct(private ResponseInterface $response)
     {
-        $this->response = $response;
     }
 
     public function unwrap(): object
@@ -45,7 +42,7 @@ class PsrResponseAdapter implements ResponseAdapterInterface
 
         return array_combine(
             array_map('strtolower', array_keys($headers)),
-            $headers
+            $headers,
         );
     }
 

@@ -15,7 +15,7 @@ trait UrnGeneratorTrait
     /**
      * Should return the resource partition (or null if not applicable).
      */
-    public function getUrnPartition(): ?string
+    public function getUrnPartition(): string|null
     {
         return null;
     }
@@ -23,7 +23,7 @@ trait UrnGeneratorTrait
     /**
      * Should return the resource tenant (or null if not applicable).
      */
-    public function getUrnTenant(): ?string
+    public function getUrnTenant(): string|null
     {
         return null;
     }
@@ -31,7 +31,7 @@ trait UrnGeneratorTrait
     /**
      * Should return the resource owner identifier (or null if not applicable).
      */
-    public function getUrnOwner(): ?string
+    public function getUrnOwner(): string|null
     {
         return null;
     }

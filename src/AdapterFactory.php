@@ -20,16 +20,12 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use function get_class;
-use function Safe\sprintf;
+use function sprintf;
 
 class AdapterFactory implements AdapterFactoryInterface
 {
-    private ?ResponseFactoryInterface $responseFactory;
-
-    public function __construct(?ResponseFactoryInterface $responseFactory = null)
+    public function __construct(private ResponseFactoryInterface|null $responseFactory = null)
     {
-        $this->responseFactory = $responseFactory;
     }
 
     public function createRequestAdapter(object $request): RequestAdapterInterface
@@ -43,7 +39,7 @@ class AdapterFactory implements AdapterFactoryInterface
         }
 
         throw new UnsupportedRequestObjectException(
-            sprintf('Cannot create an adapter for the request class "%s"', get_class($request))
+            sprintf('Cannot create an adapter for the request class "%s"', $request::class),
         );
     }
 
@@ -58,22 +54,16 @@ class AdapterFactory implements AdapterFactoryInterface
         }
 
         throw new UnsupportedResponseObjectException(
-            sprintf('Cannot create an adapter for the response class "%s"', get_class($response))
+            sprintf('Cannot create an adapter for the response class "%s"', $response::class),
         );
     }
 
-    /**
-     * @param mixed $data
-     */
-    public function isFileUpload($data): bool
+    public function isFileUpload(mixed $data): bool
     {
         return $data instanceof File || $data instanceof UploadedFileInterface;
     }
 
-    /**
-     * @param mixed $data
-     */
-    public function getUploadFileError($data): ?int
+    public function getUploadFileError(mixed $data): int|null
     {
         if ($data instanceof File) {
             return SymfonyHttpFoundationRequestAdapter::getUploadFileError($data);

@@ -21,15 +21,11 @@ interface AdapterFactoryInterface
 
     /**
      * Whether the form data passed as argument is a file upload.
-     *
-     * @param mixed $data
      */
-    public function isFileUpload($data): bool;
+    public function isFileUpload(mixed $data): bool;
 
     /**
      * Gets the upload file error from data.
-     *
-     * @param mixed $data
      */
-    public function getUploadFileError($data): ?int;
+    public function getUploadFileError(mixed $data): int|null;
 }

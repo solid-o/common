@@ -16,30 +16,20 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 
 use function assert;
 use function in_array;
+use function is_string;
 use function Safe\preg_replace;
-use function Safe\sprintf;
+use function sprintf;
 use function strtolower;
 use function var_export;
 
 class UrnConverter implements UrnConverterInterface
 {
-    /** @var ManagerRegistry[] */
-    private array $managerRegistries;
-
     /** @var string[]|null */
-    private ?array $urnDomains = null;
+    private array|null $urnDomains = null;
 
-    private ConfigCacheFactoryInterface $configCache;
-    private string $cacheDir;
-
-    /**
-     * @param ManagerRegistry[] $managerRegistries
-     */
-    public function __construct(array $managerRegistries, ConfigCacheFactoryInterface $configCache, string $cacheDir)
+    /** @param ManagerRegistry[] $managerRegistries */
+    public function __construct(private array $managerRegistries, private ConfigCacheFactoryInterface $configCache, private string $cacheDir)
     {
-        $this->managerRegistries = $managerRegistries;
-        $this->configCache = $configCache;
-        $this->cacheDir = $cacheDir;
     }
 
     public function setDomains(string ...$domains): void
@@ -55,7 +45,7 @@ class UrnConverter implements UrnConverterInterface
      * @return string[]
      * @phpstan-return class-string[]
      */
-    public function getUrnClassMap(?string $cacheDir = null): array
+    public function getUrnClassMap(string|null $cacheDir = null): array
     {
         if (empty($cacheDir)) {
             $cacheDir = $this->cacheDir;
@@ -75,7 +65,7 @@ class UrnConverter implements UrnConverterInterface
         return require $cache->getPath();
     }
 
-    public function getItemFromUrn(Urn $value, ?string $acceptable = null): object
+    public function getItemFromUrn(Urn $value, string|null $acceptable = null): object
     {
         if ($this->urnDomains && ! in_array($value->domain, $this->urnDomains, true)) {
             throw new ResourceNotFoundException(sprintf('Invalid domain "%s"', $value->domain));
@@ -91,12 +81,13 @@ class UrnConverter implements UrnConverterInterface
 
         $result = $this->findManager($class)->find($class, $value->id);
         if ($result === null || ($acceptable !== null && ! $result instanceof $acceptable)) {
-            throw new ResourceNotFoundException(sprintf('Cannot find item with urn "%s"', (string) $value));
+            throw new ResourceNotFoundException(sprintf('Cannot find item with urn "%s"', $value));
         }
 
         return $result;
     }
 
+    /** @param class-string $class */
     private function findManager(string $class): ObjectManager
     {
         $om = null;
@@ -145,6 +136,7 @@ class UrnConverter implements UrnConverterInterface
                     $class = strtolower(preg_replace('/(?<=[a-z])([A-Z])/', '_$1', $reflectionClass->getShortName()));
                 }
 
+                assert(is_string($class));
                 if (isset($map[$class])) {
                     throw new InvalidConfigurationException(sprintf('Urn class "%s" is used more than once.', $class));
                 }

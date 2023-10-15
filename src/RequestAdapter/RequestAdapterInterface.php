@@ -52,10 +52,8 @@ interface RequestAdapterInterface
     /**
      * Returns the requested query parameter.
      * Will throw if parameter does not exist.
-     *
-     * @return mixed
      */
-    public function getQueryParam(string $name);
+    public function getQueryParam(string $name): mixed;
 
     /**
      * Gets all the files of the request
@@ -75,7 +73,7 @@ interface RequestAdapterInterface
      *
      * @return object|object[]
      */
-    public function getFile(string $name);
+    public function getFile(string $name): object|array;
 
     /**
      * Gets the request content as string.
@@ -89,10 +87,8 @@ interface RequestAdapterInterface
 
     /**
      * Gets the upload file error from data.
-     *
-     * @param mixed $data
      */
-    public static function getUploadFileError($data): ?int;
+    public static function getUploadFileError(mixed $data): int|null;
 
     /**
      * Creates a new empty response (adapter) object.

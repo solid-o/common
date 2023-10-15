@@ -20,20 +20,15 @@ use function is_array;
 use function is_object;
 use function json_decode;
 use function json_encode;
-use function Safe\sprintf;
+use function sprintf;
 
 use const JSON_THROW_ON_ERROR;
 use const UPLOAD_ERR_OK;
 
 class PsrServerRequestAdapter implements RequestAdapterInterface
 {
-    private ServerRequestInterface $request;
-    private ?ResponseFactoryInterface $responseFactory;
-
-    public function __construct(ServerRequestInterface $request, ?ResponseFactoryInterface $responseFactory)
+    public function __construct(private ServerRequestInterface $request, private ResponseFactoryInterface|null $responseFactory)
     {
-        $this->request = $request;
-        $this->responseFactory = $responseFactory;
     }
 
     public function getContentType(): string
@@ -96,10 +91,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
         return array_key_exists($name, $params);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getQueryParam(string $name)
+    public function getQueryParam(string $name): mixed
     {
         $params = $this->request->getQueryParams();
         if (! array_key_exists($name, $params)) {
@@ -124,10 +116,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
         return array_key_exists($name, $files);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFile(string $name)
+    public function getFile(string $name): object|array
     {
         $files = $this->request->getUploadedFiles();
         if (! array_key_exists($name, $files)) {
@@ -147,10 +136,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
         return (int) ($this->request->getServerParams()['CONTENT_LENGTH'] ?? 0);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getUploadFileError($data): ?int
+    public static function getUploadFileError(mixed $data): int|null
     {
         if (! $data instanceof UploadedFileInterface) {
             throw new InvalidArgumentException(sprintf('Invalid uploaded file object. Expected Psr\Http\Message\UploadedFileInterface, %s given', get_debug_type($data)));
