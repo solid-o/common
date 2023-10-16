@@ -24,7 +24,7 @@ use function sprintf;
 
 class AdapterFactory implements AdapterFactoryInterface
 {
-    public function __construct(private ResponseFactoryInterface|null $responseFactory = null)
+    public function __construct(private readonly ResponseFactoryInterface|null $responseFactory = null)
     {
     }
 

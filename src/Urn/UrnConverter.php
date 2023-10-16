@@ -28,8 +28,11 @@ class UrnConverter implements UrnConverterInterface
     private array|null $urnDomains = null;
 
     /** @param ManagerRegistry[] $managerRegistries */
-    public function __construct(private array $managerRegistries, private ConfigCacheFactoryInterface $configCache, private string $cacheDir)
-    {
+    public function __construct(
+        private readonly array $managerRegistries,
+        private readonly ConfigCacheFactoryInterface $configCache,
+        private readonly string $cacheDir,
+    ) {
     }
 
     public function setDomains(string ...$domains): void

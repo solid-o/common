@@ -27,8 +27,10 @@ use const UPLOAD_ERR_OK;
 
 class PsrServerRequestAdapter implements RequestAdapterInterface
 {
-    public function __construct(private ServerRequestInterface $request, private ResponseFactoryInterface|null $responseFactory)
-    {
+    public function __construct(
+        private readonly ServerRequestInterface $request,
+        private readonly ResponseFactoryInterface|null $responseFactory,
+    ) {
     }
 
     public function getContentType(): string

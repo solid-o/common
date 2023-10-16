@@ -19,7 +19,7 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
 {
     private string $content;
 
-    public function __construct(private Response $response)
+    public function __construct(private readonly Response $response)
     {
     }
 

@@ -6,9 +6,9 @@ namespace Solido\Common\ResponseAdapter;
 
 use Psr\Http\Message\ResponseInterface;
 
+use function array_combine;
 use function array_keys;
 use function array_map;
-use function Safe\array_combine;
 
 class PsrResponseAdapter implements ResponseAdapterInterface
 {

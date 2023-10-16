@@ -22,7 +22,7 @@ use function sprintf;
 
 class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
 {
-    public function __construct(private Request $request)
+    public function __construct(private readonly Request $request)
     {
     }
 
