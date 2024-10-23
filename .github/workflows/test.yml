@@ -15,12 +15,12 @@ jobs:
 
         name: PHP ${{ matrix.php_version }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
               with:
                 fetch-depth: 0
 
             - name: Setup PHP with pecl extension
-              uses: shivammathur/setup-php@v2
+              uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # v2
               with:
                   php-version: ${{ matrix.php_version }}
                   tools: 'infection'
@@ -45,7 +45,7 @@ jobs:
                   sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' junit.xml
 
             - name: SonarCloud Scan
-              uses: sonarsource/sonarcloud-github-action@v1.5
+              uses: sonarsource/sonarcloud-github-action@32ea6119a4bd977dc6307acb6bbbf277152ede95 # v1.5
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
