@@ -35,7 +35,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getHeader(string $name): array
     {
@@ -49,7 +49,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getRequestParams(): array
     {
@@ -62,7 +62,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getQueryParams(): array
     {
@@ -84,7 +84,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getAllFiles(): array
     {

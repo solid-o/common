@@ -34,7 +34,7 @@ class PsrResponseAdapter implements ResponseAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getHeaders(): array
     {
@@ -47,7 +47,7 @@ class PsrResponseAdapter implements ResponseAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getHeader(string $name): array
     {
@@ -55,7 +55,7 @@ class PsrResponseAdapter implements ResponseAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setHeaders(array $headers): ResponseAdapterInterface
     {

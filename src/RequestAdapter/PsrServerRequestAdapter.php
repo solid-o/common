@@ -41,7 +41,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getHeader(string $name): array
     {
@@ -54,7 +54,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getRequestParams(): array
     {
@@ -79,7 +79,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getQueryParams(): array
     {
@@ -104,7 +104,7 @@ class PsrServerRequestAdapter implements RequestAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getAllFiles(): array
     {

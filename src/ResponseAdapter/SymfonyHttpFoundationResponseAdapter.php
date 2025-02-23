@@ -42,7 +42,7 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getHeaders(): array
     {
@@ -51,7 +51,7 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function getHeader(string $name): array
     {
@@ -64,7 +64,7 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     public function setHeaders(array $headers): ResponseAdapterInterface
     {
@@ -81,7 +81,7 @@ class SymfonyHttpFoundationResponseAdapter implements ResponseAdapterInterface
                 if (function_exists('Safe\ob_start')) {
                     \Safe\ob_start();
                 } else {
-                    ob_start(); // @phpstan-ignore-line
+                    ob_start();
                 }
 
                 $this->response->sendContent();
