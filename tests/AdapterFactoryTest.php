@@ -8,6 +8,7 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\UploadedFile as PsrUploadedFile;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Solido\Common\AdapterFactory;
 use Solido\Common\Exception\InvalidArgumentException;
@@ -132,13 +133,14 @@ class AdapterFactoryTest extends TestCase
     /**
      * @dataProvider provideFileUpload
      */
+    #[DataProvider('provideFileUpload')]
     public function testIsFileUpload(bool $expected, $value): void
     {
         $factory = new AdapterFactory();
         self::assertEquals($expected, $factory->isFileUpload($value));
     }
 
-    public function provideFileUpload(): iterable
+    public static function provideFileUpload(): iterable
     {
         yield [true, new File(__FILE__)];
         yield [true, new UploadedFile(__FILE__, 'xyz', 'text/plain', UPLOAD_ERR_OK, true)];

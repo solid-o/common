@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Solido\Common\Tests\Urn;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Solido\Common\Exception\InvalidArgumentException;
 use Solido\Common\Urn\Urn;
@@ -23,7 +24,7 @@ class UrnTest extends TestCase
         Urn::$defaultDomain = '';
     }
 
-    public function provideIsUrnData(): iterable
+    public static function provideIsUrnData(): iterable
     {
         yield [true, 'urn:custom_domain:123:::class-name:my-id'];
         yield [true, 'urn:domain::::class-name:my-id'];
@@ -36,6 +37,7 @@ class UrnTest extends TestCase
     /**
      * @dataProvider provideIsUrnData
      */
+    #[DataProvider('provideIsUrnData')]
     public function testIsUrnShouldWork(bool $expected, $value): void
     {
         self::assertEquals($expected, Urn::isUrn($value));
@@ -101,13 +103,14 @@ class UrnTest extends TestCase
     /**
      * @dataProvider provideNoUrn
      */
+    #[DataProvider('provideNoUrn')]
     public function testShouldThrowIfClassIsNotSet(string $value): void
     {
         $this->expectException(InvalidArgumentException::class);
         new Urn($value);
     }
 
-    public function provideNoUrn(): iterable
+    public static function provideNoUrn(): iterable
     {
         yield ['not-an-urn:domain::::class-name:my-id'];
         yield ['urn:custom_domain:123:::class-name:my-id after space'];
