@@ -115,7 +115,7 @@ class Urn implements Stringable
         $idOrUrn = (string) $idOrUrn; // @phpstan-ignore-line
 
         $result = preg_match('/^urn:(.*):(.*):(.*):(.*):(.*):(\S*)$/', $idOrUrn, $matches);
-        assert($result === 1);
+        assert($result === 1 && $matches !== null);
 
         array_shift($matches);
 

@@ -110,10 +110,7 @@ class SymfonyHttpFoundationRequestAdapter implements RequestAdapterInterface
 
     public function getRequestContent(): string
     {
-        $content = $this->request->getContent(false);
-        assert(is_string($content));
-
-        return $content;
+        return $this->request->getContent(false);
     }
 
     public function getRequestContentLength(): int
