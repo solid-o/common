@@ -23,6 +23,8 @@ jobs:
 
             -   name: Install dependencies with composer
                 run: composer install
+                env:
+                    COMPOSER_ROOT_VERSION: dev-master
 
             -   if: ${{ github.base_ref == '' }}
                 run: composer phpstan

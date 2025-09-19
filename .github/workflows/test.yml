@@ -28,6 +28,8 @@ jobs:
                   coverage: pcov
 
             - run: composer install
+              env:
+                COMPOSER_ROOT_VERSION: dev-master
             - run: vendor/bin/phpunit --coverage-clover phpunit/phpunit.coverage.xml --coverage-xml phpunit/coverage-xml --log-junit phpunit/junit.xml
             - run: infection --threads=4 --logger-github --coverage=phpunit
               if: matrix.php_version != '8.1'
