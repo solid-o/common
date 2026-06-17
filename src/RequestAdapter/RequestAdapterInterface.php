@@ -58,7 +58,7 @@ interface RequestAdapterInterface
     /**
      * Gets all the files of the request
      *
-     * @return object[]
+     * @return array<string, mixed>
      */
     public function getAllFiles(): array;
 
